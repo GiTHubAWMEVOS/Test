@@ -1,0 +1,2749 @@
+ฟลักซ์ในพื้นที่ = {RainbowColorValue = 0, HueSelectionPosition = 0}
+PresetColor ท้องถิ่น = Color3.fromRGB (66, 134, 255)
+Local UserInputService = เกม: GetService ("UserInputService")
+local TweenService = เกม: GetService ("TweenService")
+Local RunService = เกม: GetService ("RunService")
+local LocalPlayer = เกม:GetService("Players")).LocalPlayer
+เมาส์ท้องถิ่น = LocalPlayer:GetMouse()
+CloseBind ภายในเครื่อง = Enum.KeyCode.RightControl
+
+FluxLib ท้องถิ่น = Instance.new ("ScreenGui")
+FluxLib.Name = "FluxLib"
+FluxLib.Parent = game.CoreGui
+FluxLib.ZIndexBehavior = Enum.ZIndexBehavior.พี่น้อง
+
+coroutine.wrap(
+	การทำงาน()
+		ในขณะที่รอ() ทำ
+			Flux.RainbowColorValue = Flux.RainbowColorValue + 1 / 255
+			Flux.HueSelectionPosition = Flux.HueSelectionPosition + 1
+
+			ถ้า Flux.RainbowColorValue >= 1 แล้ว
+				Flux.RainbowColorValue = 0
+			จบ
+
+			ถ้า Flux.HueSelectionPosition == 80 แล้ว
+				Flux.HueSelectionPosition = 0
+			จบ
+		จบ
+	จบ
+)()
+
+ฟังก์ชันท้องถิ่น MakeDruggable (topbarobject, วัตถุ)
+	การลากในพื้นที่ = ไม่มีเลย
+	DragInput ท้องถิ่น = ไม่มี
+	DragStart ท้องถิ่น = ไม่มี
+	StartPosition ท้องถิ่น = ไม่มี
+
+	ฟังก์ชันท้องถิ่น อัปเดต (อินพุต)
+		เดลต้าท้องถิ่น = อินพุตตำแหน่ง - DragStart
+		ตำแหน่งท้องถิ่น =
+			UDim2.ใหม่(
+				StartPosition.X.Scale,
+				StartPosition.X.Offset + Delta.X,
+				StartPosition.Y.สเกล
+				StartPosition.Y.Offset + Delta.Y
+			)
+		วัตถุตำแหน่ง = pos
+	จบ
+
+	topbarobject.InputBegan:เชื่อมต่อ(
+		ฟังก์ชั่น (อินพุต)
+			ถ้า input.UserInputType == Enum.UserInputType.MouseButton1 หรือ input.UserInputType == Enum.UserInputType.Touch แล้ว
+				ลาก = จริง
+				DragStart = อินพุต ตำแหน่ง
+				StartPosition = วัตถุ ตำแหน่ง
+
+				input.Changed:Connect(
+					การทำงาน()
+						ถ้า input.UserInputState == Enum.UserInputState.End แล้ว
+							การลาก = false
+						จบ
+					จบ
+				)
+			จบ
+		จบ
+	)
+
+	topbarobject.InputChanged:เชื่อมต่อ(
+		ฟังก์ชั่น (อินพุต)
+			ถ้า
+				input.UserInputType == Enum.UserInputType.MouseMovement หรือ
+					input.UserInputType == Enum.UserInputType.Touch
+			แล้ว
+				DragInput = อินพุต
+			จบ
+		จบ
+	)
+
+	UserInputService.InputChanged:เชื่อมต่อ(
+		ฟังก์ชั่น (อินพุต)
+			ถ้าอินพุต == DragInput และลากแล้ว
+				อัปเดต (อินพุต)
+			จบ
+		จบ
+	)
+จบ
+
+
+
+ฟังก์ชัน Flux:Window (ข้อความ ด้านล่าง mainclr toclose)
+	CloseBind = toclose หรือ Enum.KeyCode.RightControl
+	PresetColor = mainclr หรือ Color3.fromRGB (66, 134, 255)
+	fs ท้องถิ่น = false
+	Local MainFrame = Instance.new ("เฟรม")
+	Local MainCorner = Instance.new ("UICorner")
+	Local LeftFrame = Instance.new ("เฟรม")
+	มุมซ้ายในเครื่อง = Instance.new ("UICorner")
+	GlowTabHolder ในเครื่อง = Instance.new ("ImageLabel")
+	ชื่อท้องถิ่น = Instance.new("TextLabel")
+	Local BottomText = Instance.new ("TextLabel")
+	Local TabHold = Instance.new ("เฟรม")
+	Local TabLayout = Instance.new ("UIListLayout")
+	Local Drag = Instance.new("เฟรม")
+	Local ContainerFolder = Instance.new ("โฟลเดอร์")
+
+	MainFrame.Name = "เมนเฟรม"
+	MainFrame.Parent = FluxLib
+	MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+	MainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	MainFrame.ClipsDescendants = true
+	เมนเฟรม ตำแหน่ง = UDim2.new(0.5, 0, 0.5, 0)
+	MainFrame.Size = UDim2.new(0, 0, 0, 0)
+
+	MainCorner.CornerRadius = UDim.new(0, 5)
+	MainCorner.Name = "มุมหลัก"
+	MainCorner.Parent = MainFrame
+
+	LeftFrame.Name = "เฟรมด้านซ้าย"
+	LeftFrame.Parent = เมนเฟรม
+	LeftFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	LeftFrame.Size = UDim2.new(0, 205, 0, 484)
+
+	LeftCorner.CornerRadius = UDim.new(0, 5)
+	LeftCorner.Name = "มุมซ้าย"
+	LeftCorner.Parent = เฟรมด้านซ้าย
+
+	GlowTabHolder.Name = "GlowTabHolder"
+	GlowTabHolder.Parent = LeftFrame
+	GlowTabHolder.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+	GlowTabHolder พื้นหลังโปร่งใส = 1.000
+	GlowTabHolder.BorderSizePixel = 0
+	GlowTabHolder.Position = UDim2.new(0, -15, 0, -15)
+	GlowTabHolder.Size = UDim2.new (1, 30, 1, 30)
+	GlowTabHolder.ZIndex = 0
+	GlowTabHolder.Image = "rbxassetid://4996891970"
+	GlowTabHolder.ImageColor3 = Color3.fromRGB (15, 15, 15)
+	GlowTabHolder.ScaleType = Enum.ScaleType.Slice
+	GlowTabHolder.SliceCenter = Rect.new(20, 20, 280, 280)
+
+	Title.Name = "ชื่อเรื่อง"
+	Title.Parent = LeftFrame
+	Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Title.BackgroundTransparency = 1.000
+	Title.Position = UDim2.new(0.097560972, 0, 0.0475206636, 0)
+	Title.Size = UDim2.new(0, 111, 0, 34)
+	Title.Font = Enum.Font.GothamBold
+	Title.Text = text
+	Title.TextColor3 = Color3.fromRGB (255, 255, 255)
+	Title.TextSize = 25,000
+	Title.TextXAlignment = Enum.TextXAlignment.Left
+
+	BottomText.Name = "ข้อความด้านล่าง"
+	BottomText.Parent = LeftFrame
+	BottomText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	BottomText.BackgroundTransparency = 1.000
+	BottomText.Position = UDim2.new(0.097560972, 0, 0.0889999792, 0)
+	BottomText.Size = UDim2.new(0, 113, 0, 28)
+	BottomText.Font = Enum.Font.Gotham
+	BottomText.Text = bottom
+	BottomText.TextColor3 = Color3.fromRGB (255, 255, 255)
+	BottomText.TextSize = 14.000
+	BottomText.TextTransparency = 0.300
+	BottomText.TextXAlignment = Enum.TextXAlignment.Left
+
+	TabHold.Name = "TabHold"
+	TabHold.Parent = LeftFrame
+	TabHold.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+	TabHold พื้นหลังโปร่งใส = 1.000
+	TabHold.Position = UDim2.new(0, 0, 0.167355374, 0)
+	TabHold.Size = UDim2.new(0, 205, 0, 403)
+
+	TabLayout.Name = "TabLayout"
+	TabLayout.Parent = TabHold
+	TabLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	TabLayout.Padding = UDim.new(0, 3)
+
+	Drag.Name = "ลาก"
+	Drag.Parent = เมนเฟรม
+	Drag.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+	Drag.BackgroundTransparency = 1.000
+	ตำแหน่งลาก = UDim2.new(0.290368259, 0, 0, 0)
+	Drag.Size = UDim2.new(0, 501, 0, 23)
+
+	ContainerFolder.Name = "คอนเทนเนอร์โฟลเดอร์"
+	ContainerFolder.Parent = MainFrame
+
+	ทำให้ลากได้ (ลาก, เมนเฟรม)
+	ทำให้ลากได้ (LeftFrame, MainFrame)
+	เมนเฟรม:TweenSize(UDim2.new(0, 706, 0, 484), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+
+	uitoggled ท้องถิ่น = false
+	UserInputService.InputBegan:เชื่อมต่อ (
+		ฟังก์ชัน (io, p)
+			ถ้า io.KeyCode == CloseBind แล้ว
+				ถ้า uitoggled == false แล้ว
+					เมนเฟรม:TweenSize(UDim2.new(0, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+					uitoggled = จริง
+					รอ(.5)
+					FluxLib.Enabled = false
+				อื่น
+					เมนเฟรม:TweenSize(UDim2.new(0, 706, 0, 484), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+					FluxLib.Enabled = true
+					uitoggled = เท็จ
+				จบ
+			จบ
+		จบ
+	)
+
+	ฟังก์ชัน Flux:Notification(desc,buttontitle)
+		สำหรับฉัน v ถัดไป MainFrame:GetChildren() do
+			ถ้า v.Name == "NotificationBase" แล้ว
+				v:ทำลาย()
+			จบ
+		จบ
+		ท้องถิ่น NotificationBase = Instance.new ("TextButton")
+		ท้องถิ่น NotificationBaseCorner = Instance.new ("UICorner")
+		Local NotificationFrame = Instance.new ("เฟรม")
+		ท้องถิ่น NotificationFrameCorner = Instance.new ("UICorner")
+		NotificationFrameGlow ในพื้นที่ = Instance.new ("ImageLabel")
+		ชื่อการแจ้งเตือนในพื้นที่ = Instance.new ("TextLabel")
+		CloseBtn ท้องถิ่น = Instance.new ("TextButton")
+		Local CloseBtnCorner = Instance.new ("UICorner")
+		NotificationDesc ท้องถิ่น = Instance.new ("TextLabel")
+
+		NotificationBase.Name = "NotificationBase"
+		NotificationBase.Parent = MainFrame
+		NotificationBase.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+		NotificationBase.BackgroundTransparency = 1
+		NotificationBase.Size = UDim2.new(0, 706, 0, 484)
+		NotificationBase.AutoButtonColor = false
+		NotificationBase.Font = Enum.Font.SourceSans
+		NotificationBase.Text = ""
+		NotificationBase.TextColor3 = Color3.fromRGB(0, 0, 0)
+		NotificationBase.TextSize = 14.000
+		NotificationBase.Visible = true
+
+		NotificationBaseCorner.CornerRadius = UDim.new(0, 5)
+		NotificationBaseCorner.Name = "NotificationBaseCorner"
+		NotificationBaseCorner.Parent = ประกาศฐาน
+
+		NotificationFrame.Name = "NotificationFrame"
+		NotificationFrame.Parent = NotificationBase
+		NotificationFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+		NotificationFrame.BackgroundColor3 = Color3.fromRGB (50, 53, 59)
+		NotificationFrame.ClipsDescendants = true
+		NotificationFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+		NotificationFrame.Size = UDim2.new(0, 0, 0, 0)
+
+		NotificationFrameCorner.CornerRadius = UDim.new(0, 5)
+		NotificationFrameCorner.Name = "NotificationFrameCorner"
+		NotificationFrameCorner.Parent = NotificationFrame
+
+		NotificationFrameGlow.Name = "NotificationFrameGlow"
+		NotificationFrameGlow.Parent = NotificationFrame
+		NotificationFrameGlow.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+		NotificationFrameGlow.BackgroundTransparency = 1.000
+		NotificationFrameGlow.BorderSizePixel = 0
+		NotificationFrameGlow.Position = UDim2.new(0, -15, 0, -15)
+		NotificationFrameGlow.Size = UDim2.new(1, 30, 1, 30)
+		NotificationFrameGlow.ZIndex = 0
+		NotificationFrameGlow.Image = "rbxassetid://4996891970"
+		NotificationFrameGlow.ImageColor3 = Color3.fromRGB (15, 15, 15)
+		NotificationFrameGlow.ScaleType = Enum.ScaleType.Slice
+		NotificationFrameGlow.SliceCenter = Rect.new(20, 20, 280, 280)
+
+		NotificationTitle.Name = "ชื่อการแจ้งเตือน"
+		NotificationTitle.Parent = กรอบการแจ้งเตือน
+		NotificationTitle.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+		NotificationTitle.BackgroundTransparency = 1.000
+		NotificationTitle.Position = UDim2.new(0.0400609747, 0, 0.0761325806, 0)
+		NotificationTitle.Size = UDim2.new(0, 111, 0, 34)
+		NotificationTitle.Font = Enum.Font.GothamBold
+		NotificationTitle.Text = Title.Text .. " | การแจ้งเตือน"
+		NotificationTitle.TextColor3 = Color3.fromRGB (255, 255, 255)
+		NotificationTitle.TextSize = 24.000
+		NotificationTitle.TextXAlignment = Enum.TextXAlignment.Left
+		NotificationTitle.TextTransparency = 1
+
+		CloseBtn.Name = "ปิดBtn"
+		CloseBtn.Parent = กรอบการแจ้งเตือน
+		CloseBtn.BackgroundColor3 = Color3.fromRGB(64, 68, 75)
+		CloseBtn.ClipsDescendants = true
+		CloseBtn.Position = UDim2.new(0.0403124988, 0, 0.720855951, 0)
+		CloseBtn.Size = UDim2.new(0, 366, 0, 43)
+		CloseBtn.AutoButtonColor = false
+		CloseBtn.Font = Enum.Font.Gotham
+		CloseBtn.Text = ชื่อปุ่ม
+		CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+		CloseBtn.TextSize = 15.000
+		CloseBtn.TextTransparency = 1
+		CloseBtn.BackgroundTransparency = 1
+
+		CloseBtnCorner.CornerRadius = UDim.ใหม่(0, 4)
+		CloseBtnCorner.Name = "ปิดBtnCorner"
+		CloseBtnCorner.Parent = CloseBtn
+
+		NotificationDesc.Name = "NotificationDesc"
+		NotificationDesc.Parent = NotificationFrame
+		NotificationDesc.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+		NotificationDesc.BackgroundTransparency = 1.000
+		NotificationDesc.Position = UDim2.new(0.112499997, 0, 0.266355127, 0)
+		NotificationDesc.Size = UDim2.new(0, 309, 0, 82)
+		NotificationDesc.Font = Enum.Font.Gotham
+		NotificationDesc.Text = อธิบาย
+		NotificationDesc.TextColor3 = Color3.fromRGB (255, 255, 255)
+		NotificationDesc.TextSize = 15.000
+		NotificationDesc.TextWrapped = true
+		NotificationDesc.TextTransparency = 1
+
+		CloseBtn.MouseEnter:เชื่อมต่อ(ฟังก์ชัน()
+			TweenService:สร้าง(
+				ปิดBtn,
+				TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+				{ความโปร่งใสของข้อความ = 0}
+			):เล่น()
+		จบ)
+
+		CloseBtn.MouseLeave:เชื่อมต่อ(ฟังก์ชัน()
+			TweenService:สร้าง(
+				ปิดBtn,
+				TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+				{ความโปร่งใสของข้อความ = 0.3}
+			):เล่น()
+		จบ)
+
+		CloseBtn.MouseButton1Click:Connect(ฟังก์ชัน()
+
+			TweenService:สร้าง(
+				ประกาศDesc,
+				TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+				{ความโปร่งใสของข้อความ = 1}
+			):เล่น()
+			TweenService:สร้าง(
+				ปิดBtn,
+				TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+				{ความโปร่งใสของข้อความ = 1}
+			):เล่น()
+			TweenService:สร้าง(
+				ชื่อการแจ้งเตือน,
+				TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+				{ความโปร่งใสของข้อความ = 1}
+			):เล่น()
+			TweenService:สร้าง(
+				ปิดBtn,
+				TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+				{ความโปร่งใสในพื้นหลัง = 1}
+			):เล่น()
+
+			รอ(.4)
+			CloseBtn.Visible = false
+			กรอบการแจ้งเตือน:TweenSize(UDim2.new(0, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+
+			รอ(.2)
+
+			TweenService:สร้าง(
+				ฐานการแจ้งเตือน
+				TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+				{ความโปร่งใสในพื้นหลัง = 1}
+			):เล่น()
+
+			รอ(.2)
+
+			NotificationBase.Visible = false
+		จบ)
+
+
+		TweenService:สร้าง(
+			ฐานการแจ้งเตือน
+			TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+			{ความโปร่งใสในพื้นหลัง = 0.550}
+		):เล่น()
+
+		รอ(.1)
+
+		กรอบการแจ้งเตือน:TweenSize(UDim2.new(0, 400, 0, 214), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+
+		รอ(.4)
+		TweenService:สร้าง(
+			ประกาศDesc,
+			TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+			{TextTransparency = .3}
+		):เล่น()
+		TweenService:สร้าง(
+			ปิดBtn,
+			TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+			{TextTransparency = .3}
+		):เล่น()
+		TweenService:สร้าง(
+			ชื่อการแจ้งเตือน,
+			TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+			{ความโปร่งใสของข้อความ = 0}
+		):เล่น()
+		TweenService:สร้าง(
+			ปิดBtn,
+			TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+			{ความโปร่งใสในพื้นหลัง = 0}
+		):เล่น()
+	จบ
+	แท็บท้องถิ่น = {}
+	ฟังก์ชัน แท็บ:แท็บ (ข้อความ, ico)
+		แท็บท้องถิ่น = Instance.new ("TextButton")
+		TabIcon ในพื้นที่ = Instance.new ("ImageLabel")
+		หัวข้อท้องถิ่น = Instance.new("TextLabel")
+
+		Tab.Name = "แท็บ"
+		Tab.Parent = TabHold
+		Tab.BackgroundColor3 = PresetColor
+		Tab.BorderSizePixel = 0
+		ขนาดแท็บ = UDim2.new(0, 205, 0, 40)
+		Tab.AutoButtonColor = false
+		Tab.Font = Enum.Font.SourceSans
+		แท็บข้อความ = ""
+		Tab.TextColor3 = Color3.fromRGB(0, 0, 0)
+		Tab.TextSize = 14.000
+		Tab.BackgroundTransparency = 1
+
+		TabIcon.Name = "TabIcon"
+		TabIcon.Parent = Tab
+		TabIcon.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+		TabIcon พื้นหลังโปร่งใส = 1.000
+		TabIcon.Position = UDim2.new(0.0634146333, 0, 0.25, 0)
+		TabIcon.Size = UDim2.new(0, 20, 0, 20)
+		TabIcon.Image = ico
+		TabIcon.ImageTransparency = .3
+
+		TabTitle.Name = "ชื่อแท็บ"
+		TabTitle.Parent = Tab
+		TabTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		TabTitle.BackgroundTransparency = 1.000
+		ตำแหน่งแท็บ = UDim2.new(0.1902439, 0, 0.25, 0)
+		TabTitle.Size = UDim2.new(0, 113, 0, 19)
+		TabTitle.Font = Enum.Font.Gotham
+		TabTitle.Text = ข้อความ
+		TabTitle.TextColor3 = Color3.fromRGB (255, 255, 255)
+		TabTitle.TextSize = 15.000
+		TabTitle.TextXAlignment = Enum.TextXAlignment.Left
+		TabTitle.TextTransparency = .3
+
+		คอนเทนเนอร์ท้องถิ่น = Instance.new ("ScrollingFrame")
+		Local ContainerLayout = Instance.new ("UIListLayout")
+
+
+		Container.Name = "คอนเทนเนอร์"
+		Container.Parent = โฟลเดอร์คอนเทนเนอร์
+		Container.Activ = true
+		คอนเทนเนอร์.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+		คอนเทนเนอร์ พื้นหลังโปร่งใส = 1.000
+		Container.BorderSizePixel = 0
+		ตำแหน่งคอนเทนเนอร์ = UDim2.new(0.321529746, 0, 0.0475206599, 0)
+		คอนเทนเนอร์ขนาด = UDim2.new(0, 470, 0, 438)
+		คอนเทนเนอร์.CanvasSize = UDim2.new(0, 0, 0, 0)
+		คอนเทนเนอร์.ScrollBarThickness = 5
+		คอนเทนเนอร์.Visible = false
+		Container.ScrollBarImageColor3 = Color3.fromRGB (71, 76, 84)
+
+		ContainerLayout.Name = "เค้าโครงคอนเทนเนอร์"
+		ContainerLayout.Parent = คอนเทนเนอร์
+		ContainerLayout.SortOrder = Enum.SortOrder.LayoutOrder
+		ContainerLayout.Padding = UDim.new(0, 15)
+
+		ถ้า fs == false แล้ว
+			fs = จริง
+			TabTitle.TextTransparency = 0
+			TabIcon.ImageTransparency = 0
+			Tab.BackgroundTransparency = 0
+			คอนเทนเนอร์.Visible = true
+		จบ
+
+		Tab.MouseButton1Click:Connect(ฟังก์ชัน()
+			สำหรับฉัน v ถัดไป ContainerFolder:GetChildren() do
+				ถ้า v.Name == "Container" แล้ว
+					v.มองเห็นได้ = false
+				จบ
+				คอนเทนเนอร์.Visible = true
+			จบ
+			สำหรับฉัน v ถัดไป TabHold:GetChildren() do
+				ถ้า v.Name == "Tab" แล้ว
+					TweenService:สร้าง(
+						วี
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 1}
+					):เล่น()
+					TweenService:สร้าง(
+						v.แท็บไอคอน
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของภาพ = .3}
+					):เล่น()
+					TweenService:สร้าง(
+						v.TabTitle,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextTransparency = .3}
+					):เล่น()
+					TweenService:สร้าง(
+						แท็บ
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						แท็บไอคอน
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของภาพ = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อแท็บ
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0}
+					):เล่น()
+				จบ
+			จบ
+		จบ)
+		ContainerContent ท้องถิ่น = {}
+		ฟังก์ชัน ContainerContent:ปุ่ม (ข้อความ, คำอธิบาย, โทรกลับ)
+			ถ้า desc == "" แล้ว
+				desc = "ไม่มีคำอธิบายสำหรับปุ่มนี้"
+			จบ
+			BtnDescToggled ในพื้นที่ = false
+			ปุ่มท้องถิ่น = Instance.new ("TextButton")
+			Local ButtonCorner = Instance.new ("UICorner")
+			ชื่อท้องถิ่น = Instance.new("TextLabel")
+			Local Circle = Instance.new("เฟรม")
+			CircleCorner ท้องถิ่น = Instance.new ("UICorner")
+			CircleSmall ท้องถิ่น = Instance.new ("Frame")
+			CircleSmallCorner ท้องถิ่น = Instance.new ("UICorner")
+			คำอธิบายท้องถิ่น = Instance.new("TextLabel")
+			ArrowBtn ในพื้นที่ = Instance.new ("ImageButton")
+			ArrowIco ในพื้นที่ = Instance.new ("ImageLabel")
+
+			Button.Name = "ปุ่ม"
+			Button.Parent = คอนเทนเนอร์
+			Button.BackgroundColor3 = Color3.fromRGB(64, 68, 75)
+			Button.ClipsDescendants = true
+			ปุ่มตำแหน่ง = UDim2.new(0.370312512, 0, 0.552631557, 0)
+			Button.Size = UDim2.new(0, 457, 0, 43)
+			Button.AutoButtonColor = false
+			Button.Font = Enum.Font.SourceSans
+			ปุ่มข้อความ = ""
+			Button.TextColor3 = Color3.fromRGB(0, 0, 0)
+			Button.TextSize = 14.000
+
+			ButtonCorner.CornerRadius = UDim.new(0, 4)
+			ButtonCorner.Name = "มุมปุ่ม"
+			ButtonCorner.Parent = Button
+
+			Title.Name = "ชื่อเรื่อง"
+			Title.Parent = Button
+			Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			Title.BackgroundTransparency = 1.000
+			Title.Position = UDim2.new(0.0822437406, 0, 0, 0)
+			Title.Size = UDim2.new(0, 113, 0, 42)
+			Title.Font = Enum.Font.Gotham
+			Title.Text = text
+			Title.TextColor3 = Color3.fromRGB (255, 255, 255)
+			Title.TextSize = 15.000
+			Title.TextTransparency = 0.300
+			Title.TextXAlignment = Enum.TextXAlignment.Left
+
+			Circle.Name = "วงกลม"
+			Circle.Parent = ชื่อเรื่อง
+			Circle.Activ = true
+			Circle.AnchorPoint = Vector2.new(0.5, 0.5)
+			Circle.BackgroundColor3 = Color3.fromRGB(211, 211, 211)
+			Circle.Position = UDim2.new(-0.150690272, 0, 0.503000021, 0)
+			Circle.Size = UDim2.new(0, 11, 0, 11)
+
+			CircleCorner.CornerRadius = UDim.new(2, 6)
+			CircleCorner.Name = "มุมวงกลม"
+			CircleCorner.Parent = วงกลม
+
+			CircleSmall.Name = "วงกลมเล็ก"
+			CircleSmall.Parent = วงกลม
+			CircleSmall.Activ = จริง
+			CircleSmall.AnchorPoint = Vector2.new (0.5, 0.5)
+			CircleSmall.BackgroundColor3 = Color3.fromRGB (64, 68, 75)
+			CircleSmall.BackgroundTransparency = 1.000
+			CircleSmall.Position = UDim2.new(0.485673368, 0, 0.503000021, 0)
+			CircleSmall.Size = UDim2.new(0, 9, 0, 9)
+
+			CircleSmallCorner.CornerRadius = UDim.ใหม่(2, 6)
+			CircleSmallCorner.Name = "CircleSmallCorner"
+			CircleSmallCorner.Parent = CircleSmall
+
+			Description.Name = "คำอธิบาย"
+			Description.Parent = ชื่อเรื่อง
+			Description.BackgroundColor3 = สี3.fromRGB(255, 255, 255)
+			คำอธิบายBackgroundTransparency = 1.000
+			Description.Position = UDim2.new(-0.200942323, 0, 0.785714269, 0)
+			Description.Size = UDim2.new(0, 432, 0, 31)
+			Description.Font = Enum.Font.Gotham
+			Description.Text = อธิบาย
+			Description.TextColor3 = สี3.fromRGB(255, 255, 255)
+			คำอธิบายขนาดข้อความ = 15.000
+			Description.TextTransparency = 1
+			Description.TextWrapped = true
+			Description.TextXAlignment = Enum.TextXAlignment.Left
+
+			ArrowBtn.Name = "ลูกศรBtn"
+			ArrowBtn.Parent = ปุ่ม
+			ArrowBtn.BackgroundColor3 = Color3.fromRGB(86, 86, 86)
+			ArrowBtn พื้นหลังโปร่งใส = 1.000
+			ArrowBtn.ตำแหน่ง = UDim2.new(0.903719902, 0, 0, 0)
+			ArrowBtn.Size = UDim2.new(0, 33, 0, 37)
+			ArrowBtn.SliceCenter = Rect.ใหม่ (30, 30, 30, 30)
+			ArrowBtn.SliceScale = 7.000
+
+			ArrowIco.Name = "ลูกศรIco"
+			ArrowIco.Parent = ArrowBtn
+			ArrowIco.AnchorPoint = Vector2.new(0.5, 0.5)
+			ArrowIco.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+			ArrowIco พื้นหลังโปร่งใส = 1.000
+			ArrowIco.Position = UDim2.new(0.495753437, 0, 0.554054081, 0)
+			ArrowIco.Selectable = จริง
+			ArrowIco.Size = UDim2.new(0, 28, 0, 24)
+			ArrowIco.Image = "http://www.roblox.com/asset/?id=6034818372"
+			ArrowIco.ImageTransparency = .3
+
+			Button.MouseEnter:Connect(ฟังก์ชัน()
+				TweenService:สร้าง(
+					ชื่อ,
+					TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+					{ความโปร่งใสของข้อความ = 0}
+				):เล่น()
+			จบ)
+
+			ปุ่ม.MouseLeave:เชื่อมต่อ(ฟังก์ชั่น()
+				TweenService:สร้าง(
+					ชื่อ,
+					TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+					{ความโปร่งใสของข้อความ = 0.3}
+				):เล่น()
+			จบ)
+
+			Button.MouseButton1Click:Connect(ฟังก์ชัน()
+				พีซีคอล (โทรกลับ)
+			จบ)
+
+			ArrowBtn.MouseButton1Click:Connect(ฟังก์ชัน()
+				ถ้า BtnDescToggled == false แล้ว
+					ปุ่ม:TweenSize(UDim2.new(0, 457, 0, 74), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, true)
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ImageColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของภาพ = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{การหมุน = 180}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลมเล็ก,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						คำอธิบาย,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0.3}
+					):เล่น()
+					รอ(.4)
+					Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+				อื่น
+					ปุ่ม:TweenSize(UDim2.new(0, 457, 0, 43), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, true)
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ImageColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของภาพ = .3}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{การหมุน = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = Color3.fromRGB(211, 211, 211)}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลมเล็ก,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 1}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0.3}
+					):เล่น()
+					TweenService:สร้าง(
+						คำอธิบาย,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 1}
+					):เล่น()
+					รอ(.4)
+					Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+				จบ
+				BtnDescToggled = ไม่ใช่ BtnDescToggled
+			จบ)
+			Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+		จบ
+		ฟังก์ชัน ContainerContent:Toggle(text, desc,default, callback)
+			ToggleDescToggled ในพื้นที่ = false
+			สลับท้องถิ่น = false
+			ถ้า desc == "" แล้ว
+				desc = "ไม่มีคำอธิบายสำหรับการสลับนี้"
+			จบ
+			local Toggle = Instance.new ("TextButton")
+			Local ToggleCorner = Instance.new ("UICorner")
+			ชื่อท้องถิ่น = Instance.new("TextLabel")
+			Local Circle = Instance.new("เฟรม")
+			CircleCorner ท้องถิ่น = Instance.new ("UICorner")
+			CircleSmall ท้องถิ่น = Instance.new ("Frame")
+			CircleSmallCorner ท้องถิ่น = Instance.new ("UICorner")
+			Local ToggleFrame = Instance.new ("เฟรม")
+			ToggleFrameCorner ในพื้นที่ = Instance.new ("UICorner")
+			Local ToggleCircle = Instance.new ("เฟรม")
+			ToggleCircleCorner ในพื้นที่ = Instance.new ("UICorner")
+			คำอธิบายท้องถิ่น = Instance.new("TextLabel")
+			ArrowBtn ในพื้นที่ = Instance.new ("ImageButton")
+			ArrowIco ในพื้นที่ = Instance.new ("ImageLabel")
+
+			Toggle.Name = "สลับ"
+			Toggle.Parent = คอนเทนเนอร์
+			Toggle.BackgroundColor3 = Color3.fromRGB (64, 68, 75)
+			Toggle.ClipsDescendants = true
+			ตำแหน่งสลับ = UDim2.new(0.110937506, 0, 0.67653507, 0)
+			Toggle.Size = UDim2.new(0, 457, 0, 43)
+			Toggle.AutoButtonColor = false
+			Toggle.Font = Enum.Font.SourceSans
+			สลับข้อความ = ""
+			Toggle.TextColor3 = Color3.fromRGB(0, 0, 0)
+			Toggle.TextSize = 14.000
+
+			ToggleCorner.CornerRadius = UDim.new(0, 4)
+			ToggleCorner.Name = "สลับมุม"
+			ToggleCorner.Parent = Toggle
+
+			Title.Name = "ชื่อเรื่อง"
+			Title.Parent = Toggle
+			Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			Title.BackgroundTransparency = 1.000
+			Title.Position = UDim2.new(0.0822437406, 0, 0, 0)
+			Title.Size = UDim2.new(0, 113, 0, 42)
+			Title.Font = Enum.Font.Gotham
+			Title.Text = text
+			Title.TextColor3 = Color3.fromRGB (255, 255, 255)
+			Title.TextSize = 15.000
+			Title.TextTransparency = 0.300
+			Title.TextXAlignment = Enum.TextXAlignment.Left
+
+			Circle.Name = "วงกลม"
+			Circle.Parent = ชื่อเรื่อง
+			Circle.Activ = true
+			Circle.AnchorPoint = Vector2.new(0.5, 0.5)
+			Circle.BackgroundColor3 = Color3.fromRGB(211, 211, 211)
+			Circle.Position = UDim2.new(-0.150690272, 0, 0.503000021, 0)
+			Circle.Size = UDim2.new(0, 11, 0, 11)
+
+			CircleCorner.CornerRadius = UDim.new(2, 6)
+			CircleCorner.Name = "มุมวงกลม"
+			CircleCorner.Parent = วงกลม
+
+			CircleSmall.Name = "วงกลมเล็ก"
+			CircleSmall.Parent = วงกลม
+			CircleSmall.Activ = จริง
+			CircleSmall.AnchorPoint = Vector2.new (0.5, 0.5)
+			CircleSmall.BackgroundColor3 = Color3.fromRGB (64, 68, 75)
+			CircleSmall.BackgroundTransparency = 1.000
+			CircleSmall.Position = UDim2.new(0.485673368, 0, 0.503000021, 0)
+			CircleSmall.Size = UDim2.new(0, 9, 0, 9)
+
+			CircleSmallCorner.CornerRadius = UDim.ใหม่(2, 6)
+			CircleSmallCorner.Name = "CircleSmallCorner"
+			CircleSmallCorner.Parent = CircleSmall
+
+			ToggleFrame.Name = "ToggleFrame"
+			ToggleFrame.Parent = วงกลม
+			ToggleFrame.BackgroundColor3 = Color3.fromRGB (54, 61, 61)
+			ToggleFrame.Position = UDim2.new(33.0856934, 0, 0, 0)
+			ToggleFrame.Size = UDim2.new(0, 27, 0, 11)
+
+			ToggleFrameCorner.Name = "ToggleFrameCorner"
+			ToggleFrameCorner.Parent = ToggleFrame
+
+			ToggleCircle.Name = "ToggleCircle"
+			ToggleCircle.Parent = ToggleFrame
+			ToggleCircle.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+			ToggleCircle.Position = UDim2.new(0, 0, -0.272727281, 0)
+			ToggleCircle.Selectable = true
+			ToggleCircle.Size = UDim2.new(0, 17, 0, 17)
+
+			ToggleCircleCorner.CornerRadius = UDim.new(2, 8)
+			ToggleCircleCorner.Name = "ToggleCircleCorner"
+			ToggleCircleCorner.Parent = ToggleCircle
+
+			Description.Name = "คำอธิบาย"
+			Description.Parent = ชื่อเรื่อง
+			Description.BackgroundColor3 = สี3.fromRGB(255, 255, 255)
+			คำอธิบายBackgroundTransparency = 1.000
+			Description.Position = UDim2.new(-0.200942323, 0, 0.785714269, 0)
+			Description.Size = UDim2.new(0, 432, 0, 31)
+			Description.Font = Enum.Font.Gotham
+			Description.Text = อธิบาย
+			Description.TextColor3 = สี3.fromRGB(255, 255, 255)
+			คำอธิบายขนาดข้อความ = 15.000
+			Description.TextTransparency = 1
+			Description.TextWrapped = true
+			Description.TextXAlignment = Enum.TextXAlignment.Left
+
+			ArrowBtn.Name = "ลูกศรBtn"
+			ArrowBtn.Parent = Toggle
+			ArrowBtn.BackgroundColor3 = Color3.fromRGB(86, 86, 86)
+			ArrowBtn พื้นหลังโปร่งใส = 1.000
+			ArrowBtn.ตำแหน่ง = UDim2.new(0.903719902, 0, 0, 0)
+			ArrowBtn.Size = UDim2.new(0, 33, 0, 37)
+			ArrowBtn.SliceCenter = Rect.ใหม่ (30, 30, 30, 30)
+			ArrowBtn.SliceScale = 7.000
+
+			ArrowIco.Name = "ลูกศรIco"
+			ArrowIco.Parent = ArrowBtn
+			ArrowIco.AnchorPoint = Vector2.new(0.5, 0.5)
+			ArrowIco.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+			ArrowIco พื้นหลังโปร่งใส = 1.000
+			ArrowIco.Position = UDim2.new(0.495753437, 0, 0.554054081, 0)
+			ArrowIco.Selectable = จริง
+			ArrowIco.Size = UDim2.new(0, 28, 0, 24)
+			ArrowIco.Image = "http://www.roblox.com/asset/?id=6034818372"
+			ArrowIco.ImageTransparency = .3
+
+			Toggle.MouseEnter:เชื่อมต่อ(ฟังก์ชั่น()
+				TweenService:สร้าง(
+					ชื่อ,
+					TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+					{ความโปร่งใสของข้อความ = 0}
+				):เล่น()
+			จบ)
+
+			Toggle.MouseLeave:เชื่อมต่อ(ฟังก์ชัน()
+				TweenService:สร้าง(
+					ชื่อ,
+					TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+					{ความโปร่งใสของข้อความ = 0.3}
+				):เล่น()
+			จบ)
+
+			Toggle.MouseButton1Click:Connect(ฟังก์ชัน()
+				ถ้าสลับ == เท็จแล้ว
+					ToggleCircle:TweenPosition(UDim2.new(0.37, 0,-0.273, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .3, จริง)
+					TweenService:สร้าง(
+						สลับวงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 =PresetColor}
+					):เล่น()
+				อื่น
+					ToggleCircle:TweenPosition(UDim2.new(0, 0,-0.273, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .3, จริง)
+					TweenService:สร้าง(
+						สลับวงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+				จบ
+				สลับ = ไม่สลับ
+				pcall (โทรกลับ, สลับ)
+			จบ)
+
+			ArrowBtn.MouseButton1Click:Connect(ฟังก์ชัน()
+				ถ้า ToggleDescToggled == false แล้ว
+					Toggle:TweenSize(UDim2.new(0, 457, 0, 74), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ImageColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของภาพ = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{การหมุน = 180}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลมเล็ก,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						คำอธิบาย,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0.3}
+					):เล่น()
+					รอ(.4)
+					Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+				อื่น
+					Toggle:TweenSize(UDim2.new(0, 457, 0, 43), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ImageColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของภาพ = .3}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{การหมุน = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = Color3.fromRGB(211, 211, 211)}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลมเล็ก,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 1}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0.3}
+					):เล่น()
+					TweenService:สร้าง(
+						คำอธิบาย,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 1}
+					):เล่น()
+					รอ(.4)
+					Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+				จบ
+				ToggleDescToggled = ไม่ใช่ ToggleDescToggled
+			จบ)
+			ถ้าค่าดีฟอลต์ == true แล้ว
+				ToggleCircle:TweenPosition(UDim2.new(0.37, 0,-0.273, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .3, จริง)
+				TweenService:สร้าง(
+					สลับวงกลม,
+					TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+					{BackgroundColor3 =PresetColor}
+				):เล่น()
+				สลับ = ไม่สลับ
+				pcall (โทรกลับ, สลับ)
+			จบ
+			Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+		จบ
+
+		ฟังก์ชัน ContainerContent:Slider(text,desc,min,max,start,callback)
+			SliderFunc ท้องถิ่น = {}
+			SliderDescToggled ท้องถิ่น = false
+			การลากในเครื่อง = false
+			ถ้า desc == "" แล้ว
+				desc = "ไม่มีคำอธิบายสำหรับตัวเลื่อนนี้"
+			จบ
+			ตัวเลื่อนในเครื่อง = Instance.new ("TextButton")
+			SliderCorner ท้องถิ่น = Instance.new ("UICorner")
+			ชื่อท้องถิ่น = Instance.new("TextLabel")
+			Local Circle = Instance.new("เฟรม")
+			CircleCorner ท้องถิ่น = Instance.new ("UICorner")
+			CircleSmall ท้องถิ่น = Instance.new ("Frame")
+			CircleSmallCorner ท้องถิ่น = Instance.new ("UICorner")
+			คำอธิบายท้องถิ่น = Instance.new("TextLabel")
+			SlideFrame ในเครื่อง = Instance.new ("Frame")
+			CurrentValueFrame ท้องถิ่น = Instance.new ("Frame")
+			SlideCircle ท้องถิ่น = Instance.new ("ImageButton")
+			ArrowBtn ในพื้นที่ = Instance.new ("ImageButton")
+			ArrowIco ในพื้นที่ = Instance.new ("ImageLabel")
+			ค่าท้องถิ่น = Instance.new ("TextLabel")
+
+			Slider.Name = "ตัวเลื่อน"
+			Slider.Parent = คอนเทนเนอร์
+			Slider.BackgroundColor3 = Color3.fromRGB (64, 68, 75)
+			Slider.ClipsDescendants = true
+			ตัวเลื่อนตำแหน่ง = UDim2.new(0.189062506, 0, 0.648612201, 0)
+			Slider.Size = UDim2.new(0, 457, 0, 60)
+			Slider.AutoButtonColor = false
+			Slider.Font = Enum.Font.SourceSans
+			ตัวเลื่อนข้อความ = ""
+			Slider.TextColor3 = Color3.fromRGB(0, 0, 0)
+			Slider.TextSize = 14.000
+
+			SliderCorner.CornerRadius = UDim.new(0, 4)
+			SliderCorner.Name = "มุมเลื่อน"
+			SliderCorner.Parent = ตัวเลื่อน
+
+			Title.Name = "ชื่อเรื่อง"
+			Title.Parent = ตัวเลื่อน
+			Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			Title.BackgroundTransparency = 1.000
+			Title.Position = UDim2.new(0.0822437406, 0, 0, 0)
+			Title.Size = UDim2.new(0, 113, 0, 42)
+			Title.Font = Enum.Font.Gotham
+			Title.Text = text
+			Title.TextColor3 = Color3.fromRGB (255, 255, 255)
+			Title.TextSize = 15.000
+			Title.TextTransparency = 0.300
+			Title.TextXAlignment = Enum.TextXAlignment.Left
+
+			Circle.Name = "วงกลม"
+			Circle.Parent = ชื่อเรื่อง
+			Circle.Activ = true
+			Circle.AnchorPoint = Vector2.new(0.5, 0.5)
+			Circle.BackgroundColor3 = Color3.fromRGB(211, 211, 211)
+			Circle.Position = UDim2.new(-0.150690272, 0, 0.503000021, 0)
+			Circle.Size = UDim2.new(0, 11, 0, 11)
+
+
+			CircleCorner.CornerRadius = UDim.new(2, 6)
+			CircleCorner.Name = "มุมวงกลม"
+			CircleCorner.Parent = วงกลม
+
+			CircleSmall.Name = "วงกลมเล็ก"
+			CircleSmall.Parent = วงกลม
+			CircleSmall.Activ = จริง
+			CircleSmall.AnchorPoint = Vector2.new (0.5, 0.5)
+			CircleSmall.BackgroundColor3 = Color3.fromRGB (64, 68, 75)
+			CircleSmall.BackgroundTransparency = 1.000
+			CircleSmall.Position = UDim2.new(0.485673368, 0, 0.503000021, 0)
+			CircleSmall.Size = UDim2.new(0, 9, 0, 9)
+
+			CircleSmallCorner.CornerRadius = UDim.ใหม่(2, 6)
+			CircleSmallCorner.Name = "CircleSmallCorner"
+			CircleSmallCorner.Parent = CircleSmall
+
+			Description.Name = "คำอธิบาย"
+			Description.Parent = ชื่อเรื่อง
+			Description.BackgroundColor3 = สี3.fromRGB(255, 255, 255)
+			คำอธิบายBackgroundTransparency = 1.000
+			Description.Position = UDim2.new(-0.2201000005, 0, 1.38600004, 0)
+			Description.Size = UDim2.new(0, 432, 0, 31)
+			Description.Font = Enum.Font.Gotham
+			Description.Text = อธิบาย
+			Description.TextColor3 = สี3.fromRGB(255, 255, 255)
+			คำอธิบายขนาดข้อความ = 15.000
+			ลักษณะความโปร่งใสของข้อความ = 0.300
+			Description.TextWrapped = true
+			Description.TextXAlignment = Enum.TextXAlignment.Left
+
+			SlideFrame.Name = "สไลด์เฟรม"
+			SlideFrame.Parent = ชื่อเรื่อง
+			SlideFrame.BackgroundColor3 = Color3.fromRGB(235, 234, 235)
+			SlideFrame.BorderSizePixel = 0
+			SlideFrame.Position = UDim2.new(-0.197140202, 0, 0.986091495, 0)
+			SlideFrame.Size = UDim2.new(0, 426, 0, 3)
+
+			CurrentValueFrame.Name = "CurrentValueFrame"
+			CurrentValueFrame.Parent = SlideFrame
+			CurrentValueFrame.BackgroundColor3 = PresetColor
+			CurrentValueFrame.BorderSizePixel = 0
+			CurrentValueFrame.Size = UDim2.new((start or 0) / max, 0, 0, 3)
+
+			SlideCircle.Name = "SlideCircle"
+			SlideCircle.Parent = SlideFrame
+			SlideCircle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			SlideCircle.BackgroundTransparency = 1.000
+			SlideCircle.Position = UDim2.new((start or 0)/max, -6,-1.30499995, 0)
+			SlideCircle.Size = UDim2.new(0, 11, 0, 11)
+			SlideCircle.Image = "rbxassetid://3570695787"
+			SlideCircle.ImageColor3 = PresetColor
+
+			ArrowBtn.Name = "ลูกศรBtn"
+			ArrowBtn.Parent = ตัวเลื่อน
+			ArrowBtn.BackgroundColor3 = Color3.fromRGB(86, 86, 86)
+			ArrowBtn พื้นหลังโปร่งใส = 1.000
+			ArrowBtn.ตำแหน่ง = UDim2.new(0.903719902, 0, 0, 0)
+			ArrowBtn.Size = UDim2.new(0, 33, 0, 37)
+			ArrowBtn.SliceCenter = Rect.ใหม่ (30, 30, 30, 30)
+			ArrowBtn.SliceScale = 7.000
+
+			ArrowIco.Name = "ลูกศรIco"
+			ArrowIco.Parent = ArrowBtn
+			ArrowIco.AnchorPoint = Vector2.new(0.5, 0.5)
+			ArrowIco.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+			ArrowIco พื้นหลังโปร่งใส = 1.000
+			ArrowIco.Position = UDim2.new(0.495753437, 0, 0.554054081, 0)
+			ArrowIco.Selectable = จริง
+			ArrowIco.Size = UDim2.new(0, 28, 0, 24)
+			ArrowIco.Image = "http://www.roblox.com/asset/?id=6034818372"
+			ArrowIco.ImageTransparency = .3
+
+			Value.Name = "ค่า"
+			Value.Parent = ชื่อเรื่อง
+			Value.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			ความคุ้มค่า ความโปร่งใสของพื้นหลัง = 1.000
+			ค่าตำแหน่ง = UDim2.new(2.27693367, 0, 0, 0)
+			Value.Size = UDim2.new(0, 113, 0, 41)
+			Value.Font = Enum.Font.Gotham
+			Value.Text = tostring(start และ math.floor((start / max) * (max - min) + min) หรือ 0)
+			Value.TextColor3 = Color3.fromRGB(255, 255, 255)
+			Value.TextSize = 15.000
+			ความโปร่งใสของข้อความ = 0.300
+			Value.TextXAlignment = Enum.TextXAlignment.Right
+
+			ArrowBtn.MouseButton1Click:Connect(ฟังก์ชัน()
+				ถ้า SliderDescToggled == false แล้ว
+					ตัวเลื่อน:TweenSize(UDim2.new(0, 457, 0, 101), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						ค่า,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ImageColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของภาพ = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{การหมุน = 180}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 =PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลมเล็ก,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						คำอธิบาย,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0.3}
+					):เล่น()
+					รอ(.4)
+					Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+				อื่น
+					ตัวเลื่อน:TweenSize(UDim2.new(0, 457, 0, 60), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						ค่า,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ImageColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของภาพ = .3}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{การหมุน = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = Color3.fromRGB(211, 211, 211)}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลมเล็ก,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 1}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0.3}
+					):เล่น()
+					TweenService:สร้าง(
+						คำอธิบาย,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 1}
+					):เล่น()
+					รอ(.4)
+					Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+				จบ
+				SliderDescToggled = ไม่ใช่ SliderDescToggled
+			จบ)
+
+			การย้ายฟังก์ชันท้องถิ่น (อินพุต)
+				ตำแหน่งท้องถิ่น =
+					UDim2.ใหม่(
+						math.clamp((อินพุต.Position.X - SlideFrame.AbsolutePosition.X) / SlideFrame.AbsoluteSize.X, 0, 1),
+						-6,
+						-1.30499995,
+						0
+					)
+				pos1 ท้องถิ่น =
+					UDim2.ใหม่(
+						math.clamp((อินพุต.Position.X - SlideFrame.AbsolutePosition.X) / SlideFrame.AbsoluteSize.X, 0, 1),
+						0,
+						0,
+						3
+					)
+				CurrentValueFrame:TweenSize(pos1, "Out", "Sine", 0.1, จริง)
+				SlideCircle:TweenPosition(pos, "Out", "Sine", 0.1, จริง)
+				ค่าท้องถิ่น = math.floor(((pos.X.Scale * max) / max) * (max - min) + min)
+				Value.Text = tostring(ค่า)
+				pcall(โทรกลับ, ค่า)
+			จบ
+			SlideCircle.InputBegan:เชื่อมต่อ(
+				ฟังก์ชั่น (อินพุต)
+					ถ้า input.UserInputType == Enum.UserInputType.MouseButton1 แล้ว
+						ลาก = true
+					จบ
+				จบ
+			)
+			SlideCircle.InputEnded:เชื่อมต่อ(
+				ฟังก์ชั่น (อินพุต)
+					ถ้า input.UserInputType == Enum.UserInputType.MouseButton1 แล้ว
+						ลาก = เท็จ
+					จบ
+				จบ
+			)
+			เกม:GetService("UserInputService")).InputChanged:Connect(
+			ฟังก์ชั่น (อินพุต)
+				ถ้าลากและใส่ UserInputType == Enum.UserInputType.MouseMovement แล้ว
+					ย้าย (อินพุต)
+				จบ
+			จบ
+			)
+			Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+			ฟังก์ชัน SliderFunc:Change(tochange)
+				CurrentValueFrame.Size = UDim2.new((เพื่อเปลี่ยนหรือ 0) / สูงสุด, 0, 0, 3)
+				SlideCircle.Position = UDim2.new((เพื่อเปลี่ยนหรือ 0)/สูงสุด, -6,-1.30499995, 0)
+				Value.Text = tostring(tochange และ math.floor((tochange / max) * (max - min) + min) หรือ 0)
+				pcall(โทรกลับ,เปลี่ยน)
+			จบ
+			ส่งคืน SliderFunc
+		จบ
+		ฟังก์ชัน ContainerContent:Dropdown(text,list,callback)
+			DropFunc ในพื้นที่ = {}
+			เลือกท้องถิ่น = ข้อความ
+			ขนาดเฟรมท้องถิ่น = 43
+			ItemCount ท้องถิ่น = 0
+			Local DropToggled = false
+			ดรอปดาวน์ในเครื่อง = Instance.new("TextButton")
+			Local DropdownCorner = Instance.new ("UICorner")
+			ชื่อท้องถิ่น = Instance.new("TextLabel")
+			Local Circle = Instance.new("เฟรม")
+			CircleCorner ท้องถิ่น = Instance.new ("UICorner")
+			CircleSmall ท้องถิ่น = Instance.new ("Frame")
+			CircleSmallCorner ท้องถิ่น = Instance.new ("UICorner")
+			ArrowIco ในพื้นที่ = Instance.new ("ImageLabel")
+			Local DropItemHolder = Instance.new ("ScrollingFrame")
+			Local DropLayout = Instance.new ("UIListLayout")
+
+			Dropdown.Name = "ดรอปดาวน์"
+			Dropdown.Parent = คอนเทนเนอร์
+			Dropdown.BackgroundColor3 = Color3.fromRGB(64, 68, 75)
+			Dropdown.ClipsDescendants = true
+			ตำแหน่งดร็อปดาวน์ = UDim2.new(0.110937499, 0, 0.67653507, 0)
+			Dropdown.Size = UDim2.new(0, 457, 0, 43)
+			Dropdown.AutoButtonColor = false
+			Dropdown.Font = Enum.Font.SourceSans
+			แบบเลื่อนลงข้อความ = ""
+			Dropdown.TextColor3 = Color3.fromRGB(0, 0, 0)
+			Dropdown.TextSize = 14.000
+
+			DropdownCorner.CornerRadius = UDim.new(0, 4)
+			DropdownCorner.Name = "มุมดร็อปดาวน์"
+			DropdownCorner.Parent = ดรอปดาวน์
+
+			Title.Name = "ชื่อเรื่อง"
+			Title.Parent = ดรอปดาวน์
+			Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			Title.BackgroundTransparency = 1.000
+			Title.Position = UDim2.new(0.0822437406, 0, 0, 0)
+			Title.Size = UDim2.new(0, 113, 0, 42)
+			Title.Font = Enum.Font.Gotham
+			Title.Text = text
+			Title.TextColor3 = Color3.fromRGB (255, 255, 255)
+			Title.TextSize = 15.000
+			Title.TextTransparency = 0.300
+			Title.TextXAlignment = Enum.TextXAlignment.Left
+
+			Circle.Name = "วงกลม"
+			Circle.Parent = ชื่อเรื่อง
+			Circle.Activ = true
+			Circle.AnchorPoint = Vector2.new(0.5, 0.5)
+			Circle.BackgroundColor3 = Color3.fromRGB(211, 211, 211)
+			Circle.Position = UDim2.new(-0.150690272, 0, 0.503000021, 0)
+			Circle.Size = UDim2.new(0, 11, 0, 11)
+
+			CircleCorner.CornerRadius = UDim.new(2, 6)
+			CircleCorner.Name = "มุมวงกลม"
+			CircleCorner.Parent = วงกลม
+
+			CircleSmall.Name = "วงกลมเล็ก"
+			CircleSmall.Parent = วงกลม
+			CircleSmall.Activ = จริง
+			CircleSmall.AnchorPoint = Vector2.new (0.5, 0.5)
+			CircleSmall.BackgroundColor3 = Color3.fromRGB (64, 68, 75)
+			CircleSmall.BackgroundTransparency = 1.000
+			CircleSmall.Position = UDim2.new(0.485673368, 0, 0.503000021, 0)
+			CircleSmall.Size = UDim2.new(0, 9, 0, 9)
+
+			CircleSmallCorner.CornerRadius = UDim.ใหม่(2, 6)
+			CircleSmallCorner.Name = "CircleSmallCorner"
+			CircleSmallCorner.Parent = CircleSmall
+
+			ArrowIco.Name = "ลูกศรIco"
+			ArrowIco.Parent = ชื่อเรื่อง
+			ArrowIco.AnchorPoint = Vector2.new(0.5, 0.5)
+			ArrowIco.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+			ArrowIco พื้นหลังโปร่งใส = 1.000
+			ArrowIco.Position = UDim2.new(3.45979357, 0, 0.508096159, 0)
+			ArrowIco.Selectable = จริง
+			ArrowIco.Size = UDim2.new(0, 28, 0, 24)
+			ArrowIco.Image = "http://www.roblox.com/asset/?id=6035047377"
+			ArrowIco.ImageTransparency = .3
+
+			DropItemHolder.Name = "DropItemHolder"
+			DropItemHolder.Parent = ชื่อเรื่อง
+			DropItemHolder.Activ = true
+			DropItemHolder.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+			DropItemHolder.BackgroundTransparency = 1.000
+			DropItemHolder.BorderSizePixel = 0
+			DropItemHolder.Position = UDim2.new(-0.203539819, 0, 1.02380955, 0)
+			DropItemHolder.Size = UDim2.new(0, 436, 0, 82)
+			DropItemHolder.CanvasSize = UDim2.new(0, 0, 0, 0)
+			DropItemHolder.ScrollBarThickness = 5
+			DropItemHolder.ScrollBarImageColor3 = Color3.fromRGB (41, 42, 48)
+
+			DropLayout.Name = "วางเลย์เอาต์"
+			DropLayout.Parent = DropItemHolder
+			DropLayout.SortOrder = Enum.SortOrder.LayoutOrder
+			DropLayout.Padding = UDim.new(0, 2)
+
+			Dropdown.MouseEnter:เชื่อมต่อ(ฟังก์ชั่น()
+				TweenService:สร้าง(
+					ชื่อ,
+					TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+					{ความโปร่งใสของข้อความ = 0}
+				):เล่น()
+			จบ)
+
+			Dropdown.MouseLeave:เชื่อมต่อ(ฟังก์ชัน()
+				TweenService:สร้าง(
+					ชื่อ,
+					TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+					{ความโปร่งใสของข้อความ = 0.3}
+				):เล่น()
+			จบ)
+
+
+			Dropdown.MouseButton1Click:Connect(ฟังก์ชัน()
+				ถ้า DropToggled == false แล้ว
+					Title.Text = เลือกแล้ว
+					ดร็อปดาวน์:TweenSize(UDim2.new(0, 457, 0, FrameSize), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ImageColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของภาพ = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{การหมุน = 180}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลมเล็ก,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0}
+					):เล่น()
+					รอ(.4)
+					Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+				อื่น
+					Title.Text = เลือกแล้ว
+					ดร็อปดาวน์:TweenSize(UDim2.new(0, 457, 0, 43), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ImageColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของภาพ = .3}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{การหมุน = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = Color3.fromRGB(211, 211, 211)}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลมเล็ก,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 1}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0.3}
+					):เล่น()
+					รอ(.4)
+					Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+				จบ
+				DropToggled = ไม่ใช่ DropToggled
+			จบ)
+
+			สำหรับ i,v ต่อไป ทำรายการ do
+				ItemCount = ItemCount + 1
+
+				ถ้า ItemCount == 1 แล้ว
+					ขนาดเฟรม = 78
+				elseif ItemCount == 2 แล้ว
+					ขนาดเฟรม = 107
+				elseif ItemCount >= 3 แล้ว
+					ขนาดเฟรม = 133
+				จบ
+				รายการท้องถิ่น = Instance.new ("TextButton")
+				Local ItemCorner = Instance.new ("UICorner")
+
+				Item.Name = "ไอเทม"
+				Item.Parent = DropItemHolder
+				Item.BackgroundColor3 = Color3.fromRGB (64, 68, 75)
+				Item.ClipsDescendants = true
+				Item.Size = UDim2.new(0, 427, 0, 25)
+				รายการ AutoButtonColor = false
+				Item.Font = Enum.Font.Gotham
+				Item.Text = v
+				รายการ TextColor3 = Color3.fromRGB (255, 255, 255)
+				รายการ ขนาดข้อความ = 15.000
+				รายการ ความโปร่งใสของข้อความ = 0.300
+
+				ItemCorner.CornerRadius = UDim.ใหม่(0, 4)
+				ItemCorner.Name = "มุมไอเท็ม"
+				ItemCorner.Parent = รายการ
+				DropItemHolder.CanvasSize = UDim2.new(0, 0, 0, DropLayout.AbsoluteContentSize.Y)
+
+				รายการ MouseEnter: เชื่อมต่อ (ฟังก์ชั่น ()
+					TweenService:สร้าง(
+						รายการ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0}
+					):เล่น()
+				จบ)
+
+				รายการ MouseLeave: เชื่อมต่อ (ฟังก์ชั่น ()
+					TweenService:สร้าง(
+						รายการ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0.3}
+					):เล่น()
+				จบ)
+
+				รายการ.MouseButton1Click:Connect(function()
+					พีซีคอล (โทรกลับ, วี)
+					Title.Text = text
+					เลือกแล้ว = v
+					DropToggled = ไม่ใช่ DropToggled
+					ดร็อปดาวน์:TweenSize(UDim2.new(0, 457, 0, 43), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ImageColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของภาพ = .3}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{การหมุน = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = Color3.fromRGB(211, 211, 211)}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลมเล็ก,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 1}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0.3}
+					):เล่น()
+					รอ(.4)
+					Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+
+				จบ)
+			จบ
+			ฟังก์ชัน DropFunc:Add(addtext)
+				ItemCount = ItemCount + 1
+
+				ถ้า ItemCount == 1 แล้ว
+					ขนาดเฟรม = 78
+				elseif ItemCount == 2 แล้ว
+					ขนาดเฟรม = 107
+				elseif ItemCount >= 3 แล้ว
+					ขนาดเฟรม = 133
+				จบ
+				รายการท้องถิ่น = Instance.new ("TextButton")
+				Local ItemCorner = Instance.new ("UICorner")
+
+				Item.Name = "ไอเทม"
+				Item.Parent = DropItemHolder
+				Item.BackgroundColor3 = Color3.fromRGB (64, 68, 75)
+				Item.ClipsDescendants = true
+				Item.Size = UDim2.new(0, 427, 0, 25)
+				รายการ AutoButtonColor = false
+				Item.Font = Enum.Font.Gotham
+				Item.Text = เพิ่มข้อความ
+				รายการ TextColor3 = Color3.fromRGB (255, 255, 255)
+				รายการ ขนาดข้อความ = 15.000
+				รายการ ความโปร่งใสของข้อความ = 0.300
+
+				ItemCorner.CornerRadius = UDim.ใหม่(0, 4)
+				ItemCorner.Name = "มุมไอเท็ม"
+				ItemCorner.Parent = รายการ
+				DropItemHolder.CanvasSize = UDim2.new(0, 0, 0, DropLayout.AbsoluteContentSize.Y)
+
+				รายการ MouseEnter: เชื่อมต่อ (ฟังก์ชั่น ()
+					TweenService:สร้าง(
+						รายการ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0}
+					):เล่น()
+				จบ)
+
+				รายการ MouseLeave: เชื่อมต่อ (ฟังก์ชั่น ()
+					TweenService:สร้าง(
+						รายการ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0.3}
+					):เล่น()
+				จบ)
+
+				รายการ.MouseButton1Click:Connect(function()
+					pcall(โทรกลับ, addtext)
+					Title.Text = text
+					เลือกแล้ว = เพิ่มข้อความ
+					DropToggled = ไม่ใช่ DropToggled
+					ดร็อปดาวน์:TweenSize(UDim2.new(0, 457, 0, 43), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ImageColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของภาพ = .3}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{การหมุน = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = Color3.fromRGB(211, 211, 211)}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลมเล็ก,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 1}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0.3}
+					):เล่น()
+					รอ(.4)
+					Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+				จบ)
+				ถ้า DropToggled == true แล้ว
+					Title.Text = เลือกแล้ว
+					ดร็อปดาวน์:TweenSize(UDim2.new(0, 457, 0, 43), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ImageColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของภาพ = .3}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{การหมุน = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = Color3.fromRGB(211, 211, 211)}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลมเล็ก,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 1}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0.3}
+					):เล่น()
+					รอ(.4)
+					Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+				จบ
+			จบ
+			ฟังก์ชัน DropFunc:Clear()
+				Title.Text = text
+				ขนาดเฟรม = 0
+				ItemCount = 0
+				สำหรับฉัน v ถัดไป DropItemHolder:GetChildren() do
+					ถ้า v.Name == "Item" แล้ว
+						v:ทำลาย()
+					จบ
+				จบ
+				ถ้า DropToggled == true แล้ว
+					Title.Text = เลือกแล้ว
+					ดร็อปดาวน์:TweenSize(UDim2.new(0, 457, 0, 43), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ImageColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของภาพ = .3}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{การหมุน = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = Color3.fromRGB(211, 211, 211)}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลมเล็ก,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 1}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0.3}
+					):เล่น()
+					รอ(.4)
+					Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+				จบ
+			จบ
+			ส่งคืน DropFunc
+		จบ
+		ฟังก์ชัน ContainerContent:Colorpicker (ข้อความ ที่ตั้งไว้ การโทรกลับ)
+			ColorPickerToggled ในพื้นที่ = false
+			OldToggleColor ท้องถิ่น = Color3.fromRGB(0, 0, 0)
+			OldColor ท้องถิ่น = Color3.fromRGB(0, 0, 0)
+			OldColorSelectionPosition ท้องถิ่น = ไม่มี
+			OldHueSelectionPosition ท้องถิ่น = ไม่มี
+			ColorH, ColorS, ColorV = 1, 1, 1 . ในพื้นที่
+			ท้องถิ่น RainbowColorPicker = false
+			ColorPickerInput ท้องถิ่น = ไม่มี
+			ColorInput ท้องถิ่น = ไม่มี
+			HueInput ท้องถิ่น = ไม่มี
+
+			Local Colorpicker = Instance.new ("เฟรม")
+			Local ColorpickerCorner = Instance.new ("UICorner")
+			ชื่อท้องถิ่น = Instance.new("TextLabel")
+			Local Circle = Instance.new("เฟรม")
+			CircleCorner ท้องถิ่น = Instance.new ("UICorner")
+			CircleSmall ท้องถิ่น = Instance.new ("Frame")
+			CircleSmallCorner ท้องถิ่น = Instance.new ("UICorner")
+			local Hue = Instance.new ("ImageLabel")
+			ท้องถิ่น HueCorner = Instance.new ("UICorner")
+			HueGradient ท้องถิ่น = Instance.new ("UIGradient")
+			Local HueSelection = Instance.new ("ImageLabel")
+			สีท้องถิ่น = Instance.new ("ImageLabel")
+			Local ColorCorner = Instance.new ("UICorner")
+			Local ColorSelection = Instance.new ("ImageLabel")
+			local Toggle = Instance.new ("TextLabel")
+			Local ToggleFrame = Instance.new ("เฟรม")
+			ToggleFrameCorner ในพื้นที่ = Instance.new ("UICorner")
+			Local ToggleCircle = Instance.new ("เฟรม")
+			ToggleCircleCorner ในพื้นที่ = Instance.new ("UICorner")
+			ยืนยันท้องถิ่น = Instance.new ("TextButton")
+			ConfirmCorner ท้องถิ่น = Instance.new ("UICorner")
+			ConfirmTitle ท้องถิ่น = Instance.new("TextLabel")
+			Local BoxColor = Instance.new ("เฟรม")
+			Local BoxColorCorner = Instance.new ("UICorner")
+			Local ColorpickerBtn = Instance.new ("TextButton")
+			Local ToggleBtn = Instance.new ("ปุ่มข้อความ")
+
+
+			Colorpicker.Name = "ตัวเลือกสี"
+			Colorpicker.Parent = คอนเทนเนอร์
+			Colorpicker.BackgroundColor3 = Color3.fromRGB (64, 68, 75)
+			Colorpicker.ClipsDescendants = true
+			Colorpicker.Position = UDim2.new(0.110937499, 0, 0.67653507, 0)
+			Colorpicker.Size = UDim2.new(0, 457, 0, 43)
+
+			ColorpickerCorner.CornerRadius = UDim.new(0, 4)
+			ColorpickerCorner.Name = "ColorpickerCorner"
+			ColorpickerCorner.Parent = Colorpicker
+
+			Title.Name = "ชื่อเรื่อง"
+			Title.Parent = Colorpicker
+			Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			Title.BackgroundTransparency = 1.000
+			Title.Position = UDim2.new(0.0822437406, 0, 0, 0)
+			Title.Size = UDim2.new(0, 113, 0, 42)
+			Title.Font = Enum.Font.Gotham
+			Title.Text = "Colorpicker"
+			Title.TextColor3 = Color3.fromRGB (255, 255, 255)
+			Title.TextSize = 15.000
+			Title.TextTransparency = 0.300
+			Title.TextXAlignment = Enum.TextXAlignment.Left
+
+
+			ColorpickerBtn.Name = "ColorpickerBtn"
+			ColorpickerBtn.Parent = ชื่อเรื่อง
+			ColorpickerBtn.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+			ColorpickerBtn.BackgroundTransparency = 1.000
+			ColorpickerBtn.Position = UDim2.new(-0.336283177, 0, 0, 0)
+			ColorpickerBtn.Size = UDim2.new(0, 457, 0, 42)
+			ColorpickerBtn .Font = Enum.Font.SourceSans
+			ColorpickerBtn.Text = ""
+			ColorpickerBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
+			ColorpickerBtn.TextSize = 14.000
+
+			Circle.Name = "วงกลม"
+			Circle.Parent = ชื่อเรื่อง
+			Circle.Activ = true
+			Circle.AnchorPoint = Vector2.new(0.5, 0.5)
+			Circle.BackgroundColor3 = Color3.fromRGB(211, 211, 211)
+			Circle.Position = UDim2.new(-0.150690272, 0, 0.503000021, 0)
+			Circle.Size = UDim2.new(0, 11, 0, 11)
+
+			CircleCorner.CornerRadius = UDim.new(2, 6)
+			CircleCorner.Name = "มุมวงกลม"
+			CircleCorner.Parent = วงกลม
+
+			CircleSmall.Name = "วงกลมเล็ก"
+			CircleSmall.Parent = วงกลม
+			CircleSmall.Activ = จริง
+			CircleSmall.AnchorPoint = Vector2.new (0.5, 0.5)
+			CircleSmall.BackgroundColor3 = Color3.fromRGB (64, 68, 75)
+			CircleSmall.BackgroundTransparency = 1.000
+			CircleSmall.Position = UDim2.new(0.485673368, 0, 0.503000021, 0)
+			CircleSmall.Size = UDim2.new(0, 9, 0, 9)
+
+			CircleSmallCorner.CornerRadius = UDim.ใหม่(2, 6)
+			CircleSmallCorner.Name = "CircleSmallCorner"
+			CircleSmallCorner.Parent = CircleSmall
+
+			Hue.Name = "เว้"
+			Hue.Parent = ชื่อเรื่อง
+			Hue.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			Hue.Position = UDim2.new(0, 229, 0, 46)
+			Hue.Size = UDim2.new(0, 25, 0, 80)
+
+			HueCorner.CornerRadius = UDim.new(0, 3)
+			HueCorner.Name = "เว้คอร์เนอร์"
+			HueCorner.Parent = เว้
+
+			HueGradient.Color = ColorSequence.new {
+				ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 0, 4)),
+				ColorSequenceKeypoint.new(0.20, Color3.fromRGB(234, 255, 0)),
+				ColorSequenceKeypoint.new(0.40, Color3.fromRGB(21, 255, 0)),
+				ColorSequenceKeypoint.new(0.60, Color3.fromRGB(0, 255, 255)),
+				ColorSequenceKeypoint.new(0.80, Color3.fromRGB(0, 17, 255)),
+				ColorSequenceKeypoint.new(0.90, Color3.fromRGB(255, 0, 251)),
+				ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 0, 4))
+			}			
+			HueGradient.การหมุน = 270
+			HueGradient.Name = "ฮิวเกรเดียนท์"
+			HueGradient.Parent = เว้
+
+			HueSelection.Name = "การเลือกเฉดสี"
+			HueSelection.Parent = เว้
+			HueSelection.AnchorPoint = Vector2.new (0.5, 0.5)
+			HueSelection.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+			HueSelection.BackgroundTransparency = 1.000
+			HueSelection.Position = UDim2.new(0.48, 0, 1 - select(1, Color3.toHSV(preset)))
+			HueSelection.Size = UDim2.new(0, 18, 0, 18)
+			HueSelection.Image = "http://www.roblox.com/asset/?id=4805639000"
+			HueSelection.Visible = false
+
+			Color.Name = "สี"
+			Color.Parent = ชื่อเรื่อง
+			Color.BackgroundColor3 = Color3.fromRGB (255, 0, 4)
+			ตำแหน่งสี = UDim2.new(0, -23, 0, 46)
+			Color.Size = UDim2.new(0, 246, 0, 80)
+			Color.ZIndex = 10
+			Color.Image = "rbxassetid://4155801252"
+
+			ColorCorner.CornerRadius = UDim.new(0, 3)
+			ColorCorner.Name = "มุมสี"
+			ColorCorner.Parent = สี
+
+			ColorSelection.Name = "การเลือกสี"
+			ColorSelection.Parent = สี
+			ColorSelection.AnchorPoint = Vector2.new (0.5, 0.5)
+			ColorSelection.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+			การเลือกสี ความโปร่งใสของพื้นหลัง = 1.000
+			ColorSelection.Position = UDim2.new (ตั้งค่าล่วงหน้าและเลือก (3, Color3.toHSV (ตั้งค่าล่วงหน้า)))
+			ColorSelection.Size = UDim2.new(0, 18, 0, 18)
+			ColorSelection.Image = "http://www.roblox.com/asset/?id=4805639000"
+			ColorSelection.ScaleType = Enum.ScaleType.Fit
+			ColorSelection.Visible = false
+
+			Toggle.Name = "สลับ"
+			Toggle.Parent = ชื่อเรื่อง
+			Toggle.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+			Toggle.BackgroundTransparency = 1.000
+			ตำแหน่งสลับ = UDim2.new(2.37430048, 0, 1.07157099, 0)
+			Toggle.Size = UDim2.new(0, 137, 0, 38)
+			Toggle.Font = Enum.Font.Gotham
+			Toggle.Text = "สายรุ้ง"
+			Toggle.TextColor3 = Color3.fromRGB (255, 255, 255)
+			Toggle.TextSize = 15.000
+			Toggle.TextTransparency = 0.300
+			Toggle.TextXAlignment = Enum.TextXAlignment.Left
+
+			ToggleFrame.Name = "ToggleFrame"
+			ToggleFrame.Parent = Toggle
+			ToggleFrame.BackgroundColor3 = Color3.fromRGB (226, 227, 227)
+			ToggleFrame.Position = UDim2.new(0.778387249, 0, 0.357142866, 0)
+			ToggleFrame.Size = UDim2.new(0, 27, 0, 11)
+
+			ToggleFrameCorner.Name = "ToggleFrameCorner"
+			ToggleFrameCorner.Parent = ToggleFrame
+
+			ToggleCircle.Name = "ToggleCircle"
+			ToggleCircle.Parent = ToggleFrame
+			ToggleCircle.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+			ToggleCircle.Position = UDim2.new(0, 0, -0.2730,000002, 0)
+			ToggleCircle.Selectable = true
+			ToggleCircle.Size = UDim2.new(0, 17, 0, 17)
+
+			ToggleCircleCorner.CornerRadius = UDim.new(2, 8)
+			ToggleCircleCorner.Name = "ToggleCircleCorner"
+			ToggleCircleCorner.Parent = ToggleCircle
+
+			Confirm.Name = "ยืนยัน"
+			Confirm.Parent = ชื่อเรื่อง
+			Confirm.BackgroundColor3 = Color3.fromRGB(64, 68, 75)
+			Confirm.ClipsDescendants = true
+			ยืนยันตำแหน่ง = UDim2.new(2.3791616, 0, 1.97633278, 0)
+			Confirm.Size = UDim2.new(0, 144, 0, 42)
+			Confirm.AutoButtonColor = false
+			Confirm.Font = Enum.Font.SourceSans
+			ยืนยันข้อความ = ""
+			Confirm.TextColor3 = Color3.fromRGB(0, 0, 0)
+			Confirm.TextSize = 14.000
+
+			ConfirmCorner.CornerRadius = UDim.new(0, 4)
+			ConfirmCorner.Name = "ยืนยันมุม"
+			ConfirmCorner.Parent = ยืนยัน
+
+			ConfirmTitle.Name = "ยืนยันหัวข้อ"
+			ConfirmTitle.Parent = ยืนยัน
+			ConfirmTitle.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+			ConfirmTitle.BackgroundTransparency = 1.000
+			ConfirmTitle.Size = UDim2.new(0, 116, 0, 40)
+			ConfirmTitle.Font = Enum.Font.Gotham
+			ConfirmTitle.Text = "ยืนยัน"
+			ConfirmTitle.TextColor3 = Color3.fromRGB (255, 255, 255)
+			ConfirmTitle.TextSize = 15.000
+			ConfirmTitle.TextTransparency = 0.300
+			ConfirmTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+			BoxColor.Name = "BoxColor"
+			BoxColor.Parent = ชื่อเรื่อง
+			BoxColor.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+			BoxColor.Position = UDim2.new(3.26915574, 0, 0.261904776, 0)
+			BoxColor.Size = UDim2.new(0, 35, 0, 19)
+
+			BoxColorCorner.CornerRadius = UDim.new(0, 4)
+			BoxColorCorner.Name = "BoxColorCorner"
+			BoxColorCorner.Parent = BoxColor
+
+			ToggleBtn.Name = "ToggleBtn"
+			ToggleBtn.Parent = Toggle
+			ToggleBtn.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+			ToggleBtn.BackgroundTransparency = 1.000
+			ToggleBtn.Size = UDim2.new(0, 137, 0, 38)
+			ToggleBtn.Font = Enum.Font.SourceSans
+			ToggleBtn.Text = ""
+			ToggleBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
+			ToggleBtn.TextSize = 14.000
+
+			ColorpickerBtn.MouseEnter:เชื่อมต่อ(ฟังก์ชัน()
+				TweenService:สร้าง(
+					ชื่อ,
+					TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+					{ความโปร่งใสของข้อความ = 0}
+				):เล่น()
+			จบ)
+
+			ColorpickerBtn.MouseLeave:เชื่อมต่อ(ฟังก์ชัน()
+				TweenService:สร้าง(
+					ชื่อ,
+					TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+					{ความโปร่งใสของข้อความ = 0.3}
+				):เล่น()
+			จบ)
+
+			ColorpickerBtn.MouseButton1Click:Connect(ฟังก์ชัน()
+				ถ้า ColorPickerToggled == false แล้ว
+					ColorSelection.Visible = true
+					HueSelection.Visible = true
+					Colorpicker:TweenSize(UDim2.new(0, 457, 0, 138), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลมเล็ก,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0}
+					):เล่น()
+					รอ(.4)
+					Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+				อื่น
+					ColorSelection.Visible = false
+					HueSelection.Visible = false
+					Colorpicker:TweenSize(UDim2.new(0, 457, 0, 43), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = Color3.fromRGB(211, 211, 211)}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลมเล็ก,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 1}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0.3}
+					):เล่น()
+					รอ(.4)
+					Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+				จบ
+				ColorPickerToggled = ไม่ใช่ ColorPickerToggled
+			จบ)
+
+
+			ฟังก์ชันท้องถิ่น UpdateColorPicker (ไม่)
+				BoxColor.BackgroundColor3 = Color3.fromHSV (ColorH, ColorS, ColorV)
+				Color.BackgroundColor3 = Color3.fromHSV(ColorH, 1, 1)
+
+				pcall(โทรกลับ, BoxColor.BackgroundColor3)
+			จบ
+
+			สีH =
+				1 -
+				(math.clamp(HueSelection.AbsolutePosition.Y - Hue.AbsolutePosition.Y, 0, Hue.AbsoluteSize.Y) /
+					Hue.AbsoluteSize.Y)
+			สีS =
+				(math.clamp(ColorSelection.AbsolutePosition.X - Color.AbsolutePosition.X, 0, Color.AbsoluteSize.X) /
+					Color.AbsoluteSize.X)
+			สีV =
+				1 -
+				(math.clamp(ColorSelection.AbsolutePosition.Y - Color.AbsolutePosition.Y, 0, Color.AbsoluteSize.Y) /
+					Color.AbsoluteSize.Y)
+
+			BoxColor.BackgroundColor3 = ที่ตั้งไว้ล่วงหน้า
+			Color.BackgroundColor3 = ที่ตั้งไว้ล่วงหน้า
+			pcall(โทรกลับ, BoxColor.BackgroundColor3)
+
+			Color.InputBegan:เชื่อมต่อ(
+				ฟังก์ชั่น (อินพุต)
+					ถ้า input.UserInputType == Enum.UserInputType.MouseButton1 แล้ว
+						ถ้า RainbowColorPicker แล้ว
+							กลับ
+						จบ
+
+						ถ้า ColorInput แล้ว
+							อินพุตสี: ตัดการเชื่อมต่อ ()
+						จบ
+
+						อินพุตสี =
+							RunService.RenderStepped:เชื่อมต่อ(
+								การทำงาน()
+								ColorX ท้องถิ่น =
+									(math.clamp(Mouse.X - Color.AbsolutePosition.X, 0, Color.AbsoluteSize.X) /
+										Color.AbsoluteSize.X)
+								สีท้องถิ่นY =
+									(math.clamp(Mouse.Y - Color.AbsolutePosition.Y, 0, Color.AbsoluteSize.Y) /
+										Color.AbsoluteSize.Y)
+
+								ColorSelection.Position = UDim2.new(ColorX, 0, ColorY, 0)
+								ColorS = ColorX
+								ColorV = 1 - ColorY
+
+								UpdateColorPicker(จริง)
+							จบ
+							)
+					จบ
+				จบ
+			)
+
+			Color.InputEnded:เชื่อมต่อ(
+				ฟังก์ชั่น (อินพุต)
+					ถ้า input.UserInputType == Enum.UserInputType.MouseButton1 แล้ว
+						ถ้า ColorInput แล้ว
+							อินพุตสี: ตัดการเชื่อมต่อ ()
+						จบ
+					จบ
+				จบ
+			)
+
+			Hue.InputBegan:เชื่อมต่อ(
+				ฟังก์ชั่น (อินพุต)
+					ถ้า input.UserInputType == Enum.UserInputType.MouseButton1 แล้ว
+						ถ้า RainbowColorPicker แล้ว
+							กลับ
+						จบ
+
+						ถ้า HueInput แล้ว
+							HueInput: ตัดการเชื่อมต่อ ()
+						จบ
+
+						HueInput =
+							RunService.RenderStepped:เชื่อมต่อ(
+								การทำงาน()
+								HueY ท้องถิ่น =
+									(math.clamp(Mouse.Y - Hue.AbsolutePosition.Y, 0, Hue.AbsoluteSize.Y) /
+										Hue.AbsoluteSize.Y)
+
+								HueSelection.Position = UDim2.new(0.48, 0, HueY, 0)
+								ColorH = 1 - HueY
+
+								UpdateColorPicker(จริง)
+							จบ
+							)
+					จบ
+				จบ
+			)
+
+			Hue.InputEnded:เชื่อมต่อ(
+				ฟังก์ชั่น (อินพุต)
+					ถ้า input.UserInputType == Enum.UserInputType.MouseButton1 แล้ว
+						ถ้า HueInput แล้ว
+							HueInput: ตัดการเชื่อมต่อ ()
+						จบ
+					จบ
+				จบ
+			)
+
+			ToggleBtn.MouseButton1Down:เชื่อมต่อ(
+				การทำงาน()
+					RainbowColorPicker = ไม่ใช่ RainbowColorPicker
+
+					ถ้า ColorInput แล้ว
+						อินพุตสี: ตัดการเชื่อมต่อ ()
+					จบ
+
+					ถ้า HueInput แล้ว
+						HueInput: ตัดการเชื่อมต่อ ()
+					จบ
+
+					ถ้า RainbowColorPicker แล้ว
+						ToggleCircle:TweenPosition(UDim2.new(0.37, 0,-0.273, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .3, จริง)
+						TweenService:สร้าง(
+							สลับวงกลม,
+							TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+							{BackgroundColor3 =PresetColor}
+						):เล่น()
+
+						OldToggleColor = BoxColor.BackgroundColor3
+						OldColor = Color.BackgroundColor3
+						OldColorSelectionPosition = ColorSelection.Position
+						OldHueSelectionPosition = HueSelection ตำแหน่ง
+
+						ในขณะที่ RainbowColorPicker ทำ
+							BoxColor.BackgroundColor3 = Color3.fromHSV(Flux.RainbowColorValue, 1, 1)
+							Color.BackgroundColor3 = Color3.fromHSV(Flux.RainbowColorValue, 1, 1)
+
+							ColorSelection.Position = UDim2.new(1, 0, 0, 0)
+							HueSelection.Position = UDim2.new(0.48, 0, 0, Flux.HueSelectionPosition)
+
+							pcall(โทรกลับ, BoxColor.BackgroundColor3)
+							รอ()
+						จบ
+					elseif ไม่ใช่ RainbowColorPicker แล้ว
+						ToggleCircle:TweenPosition(UDim2.new(0, 0,-0.273, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .3, จริง)
+						TweenService:สร้าง(
+							สลับวงกลม,
+							TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+							{BackgroundColor3 = Color3.fromRGB(255,255,255)}
+						):เล่น()
+
+						BoxColor.BackgroundColor3 = OldToggleColor
+						Color.BackgroundColor3 = สีเก่า
+
+						ColorSelection.Position = OldColorSelectionPosition
+						HueSelection.Position = OldHueSelectionPosition ตำแหน่ง
+
+						pcall(โทรกลับ, BoxColor.BackgroundColor3)
+					จบ
+				จบ
+			)
+
+			Confirm.MouseButton1Click:Connect(
+				การทำงาน()
+					ColorPickerToggled = ไม่ใช่ ColorPickerToggled
+					Colorpicker:TweenSize(UDim2.new(0, 457, 0, 43), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = Color3.fromRGB(211, 211, 211)}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลมเล็ก,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 1}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0.3}
+					):เล่น()
+					รอ(.4)
+					Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+				จบ
+			)
+			Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+		จบ
+		ฟังก์ชัน ContainerContent:Line()
+			local Line = Instance.new ("TextButton")
+			Local LineCorner = Instance.new ("UICorner")
+
+			Line.Name = "ไลน์"
+			Line.Parent = คอนเทนเนอร์
+			Line.BackgroundColor3 = Color3.fromRGB(64, 68, 75)
+			Line.ClipsDescendants = true
+			Line.Position = UDim2.new(0, 0, 0.70091325, 0)
+			Line.Size = UDim2.new(0, 457, 0, 4)
+			Line.AutoButtonColor = false
+			Line.Font = Enum.Font.SourceSans
+			บรรทัดข้อความ = ""
+			Line.TextColor3 = Color3.fromRGB(0, 0, 0)
+			Line.TextSize = 14.000
+
+			LineCorner.CornerRadius = UDim.new(0, 4)
+			LineCorner.Name = "LineCorner"
+			LineCorner.Parent = Line
+
+			Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+		จบ
+		ฟังก์ชัน ContainerContent:Label(ข้อความ)
+			ป้ายกำกับท้องถิ่น = Instance.new ("TextButton")
+			Local LabelCorner = Instance.new ("UICorner")
+			ชื่อท้องถิ่น = Instance.new("TextLabel")
+
+			Label.Name = "ป้ายกำกับ"
+			Label.Parent = คอนเทนเนอร์
+			Label.BackgroundColor3 = Color3.fromRGB(64, 68, 75)
+			Label.ClipsDescendants = true
+			ป้ายตำแหน่ง = UDim2.new(0.370312512, 0, 0.552631557, 0)
+			Label.Size = UDim2.new(0, 457, 0, 43)
+			Label.AutoButtonColor = false
+			Label.Font = Enum.Font.SourceSans
+			ป้ายข้อความ = ""
+			Label.TextColor3 = Color3.fromRGB(0, 0, 0)
+			Label.TextSize = 14.000
+
+			LabelCorner.CornerRadius = UDim.new(0, 4)
+			LabelCorner.Name = "มุมป้าย"
+			LabelCorner.Parent = ป้าย
+
+			Title.Name = "ชื่อเรื่อง"
+			Title.Parent = ป้ายกำกับ
+			Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			Title.BackgroundTransparency = 1.000
+			Title.Position = UDim2.new(0.038480062, 0, 0, 0)
+			Title.Size = UDim2.new(0, 113, 0, 42)
+			Title.Font = Enum.Font.Gotham
+			Title.Text = text
+			Title.TextColor3 = Color3.fromRGB (255, 255, 255)
+			Title.TextSize = 15.000
+			Title.TextTransparency = 0.300
+			Title.TextXAlignment = Enum.TextXAlignment.Left
+
+			Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+		จบ
+		ฟังก์ชัน ContainerContent: Textbox (ข้อความ, คำอธิบาย, disapper, โทรกลับ)
+			ถ้า desc == "" แล้ว
+				desc = "ไม่มีคำอธิบายสำหรับกล่องข้อความนี้"
+			จบ
+			TextboxDescToggled ในพื้นที่ = false
+			กล่องข้อความท้องถิ่น = Instance.new ("TextButton")
+			Local TextboxCorner = Instance.new ("UICorner")
+			ชื่อท้องถิ่น = Instance.new("TextLabel")
+			Local Circle = Instance.new("เฟรม")
+			CircleCorner ท้องถิ่น = Instance.new ("UICorner")
+			CircleSmall ท้องถิ่น = Instance.new ("Frame")
+			CircleSmallCorner ท้องถิ่น = Instance.new ("UICorner")
+			คำอธิบายท้องถิ่น = Instance.new("TextLabel")
+			TextboxFrame ท้องถิ่น = Instance.new ("Frame")
+			TextboxFrameCorner ในเครื่อง = Instance.new ("UICorner")
+			กล่องข้อความท้องถิ่น = Instance.new ("กล่องข้อความ")
+			ArrowBtn ในพื้นที่ = Instance.new ("ImageButton")
+			ArrowIco ในพื้นที่ = Instance.new ("ImageLabel")
+
+			Textbox.Name = "กล่องข้อความ"
+			Textbox.Parent = คอนเทนเนอร์
+			Textbox.BackgroundColor3 = Color3.fromRGB (64, 68, 75)
+			Textbox.ClipsDescendants = true
+			Textbox.Position = UDim2.new(0.0459499061, 0, 0.734449744, 0)
+			Textbox.Size = UDim2.new(0, 457, 0, 43)
+			Textbox.AutoButtonColor = false
+			Textbox.Font = Enum.Font.SourceSans
+			Textbox.Text = ""
+			Textbox.TextColor3 = Color3.fromRGB(0, 0, 0)
+			Textbox.TextSize = 14.000
+
+			TextboxCorner.CornerRadius = UDim.new(0, 4)
+			TextboxCorner.Name = "มุมกล่องข้อความ"
+			TextboxCorner.Parent = กล่องข้อความ
+
+			Title.Name = "ชื่อเรื่อง"
+			Title.Parent = กล่องข้อความ
+			Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+			Title.BackgroundTransparency = 1.000
+			Title.Position = UDim2.new(0.0822437406, 0, 0, 0)
+			Title.Size = UDim2.new(0, 113, 0, 42)
+			Title.Font = Enum.Font.Gotham
+			Title.Text = text
+			Title.TextColor3 = Color3.fromRGB (255, 255, 255)
+			Title.TextSize = 15.000
+			Title.TextTransparency = 0.300
+			Title.TextXAlignment = Enum.TextXAlignment.Left
+
+			Circle.Name = "วงกลม"
+			Circle.Parent = ชื่อเรื่อง
+			Circle.Activ = true
+			Circle.AnchorPoint = Vector2.new(0.5, 0.5)
+			Circle.BackgroundColor3 = Color3.fromRGB(211, 211, 211)
+			Circle.Position = UDim2.new(-0.150690272, 0, 0.503000021, 0)
+			Circle.Size = UDim2.new(0, 11, 0, 11)
+
+			CircleCorner.CornerRadius = UDim.new(2, 6)
+			CircleCorner.Name = "มุมวงกลม"
+			CircleCorner.Parent = วงกลม
+
+			CircleSmall.Name = "วงกลมเล็ก"
+			CircleSmall.Parent = วงกลม
+			CircleSmall.Activ = จริง
+			CircleSmall.AnchorPoint = Vector2.new (0.5, 0.5)
+			CircleSmall.BackgroundColor3 = Color3.fromRGB (64, 68, 75)
+			CircleSmall.BackgroundTransparency = 1.000
+			CircleSmall.Position = UDim2.new(0.485673368, 0, 0.503000021, 0)
+			CircleSmall.Size = UDim2.new(0, 9, 0, 9)
+
+			CircleSmallCorner.CornerRadius = UDim.ใหม่(2, 6)
+			CircleSmallCorner.Name = "CircleSmallCorner"
+			CircleSmallCorner.Parent = CircleSmall
+
+			Description.Name = "คำอธิบาย"
+			Description.Parent = ชื่อเรื่อง
+			Description.BackgroundColor3 = สี3.fromRGB(255, 255, 255)
+			คำอธิบายBackgroundTransparency = 1.000
+			Description.Position = UDim2.new(-0.200942323, 0, 0.985714269, 0)
+			Description.Size = UDim2.new(0, 432, 0, 31)
+			Description.Font = Enum.Font.Gotham
+			Description.Text = อธิบาย
+			Description.TextColor3 = สี3.fromRGB(255, 255, 255)
+			คำอธิบายขนาดข้อความ = 15.000
+			Description.TextTransparency = 1
+			Description.TextWrapped = true
+			Description.TextXAlignment = Enum.TextXAlignment.Left
+
+			TextboxFrame.Name = "TextboxFrame"
+			TextboxFrame.Parent = ชื่อเรื่อง
+			TextboxFrame.BackgroundColor3 = Color3.fromRGB (50, 53, 59)
+			TextboxFrame.Position = UDim2.new(1.82300889, 0, 0.202380955, 0)
+			TextboxFrame.Size = UDim2.new(0, 161, 0, 26)
+
+			TextboxFrameCorner.CornerRadius = UDim.new(0, 4)
+			TextboxFrameCorner.Name = "TextboxFrameCorner"
+			TextboxFrameCorner.Parent = TextboxFrame
+
+			TextBox.Parent = TextboxFrame
+			TextBox.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+			TextBox.BackgroundTransparency = 1.000
+			TextBox.Size = UDim2.new(0, 161, 0, 26)
+			TextBox.Font = Enum.Font.Gotham
+			TextBox.Text = ""
+			TextBox.TextColor3 = Color3.fromRGB (255, 255, 255)
+			TextBox.TextSize = 15.000
+			TextBox.TextTransparency = 0.300
+
+			ArrowBtn.Name = "ลูกศรBtn"
+			ArrowBtn.Parent = กล่องข้อความ
+			ArrowBtn.BackgroundColor3 = Color3.fromRGB(86, 86, 86)
+			ArrowBtn พื้นหลังโปร่งใส = 1.000
+			ArrowBtn.ตำแหน่ง = UDim2.new(0.903719902, 0, 0, 0)
+			ArrowBtn.Size = UDim2.new(0, 33, 0, 37)
+			ArrowBtn.SliceCenter = Rect.ใหม่ (30, 30, 30, 30)
+			ArrowBtn.SliceScale = 7.000
+
+			ArrowIco.Name = "ลูกศรIco"
+			ArrowIco.Parent = ArrowBtn
+			ArrowIco.AnchorPoint = Vector2.new(0.5, 0.5)
+			ArrowIco.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+			ArrowIco พื้นหลังโปร่งใส = 1.000
+			ArrowIco.Position = UDim2.new(0.495753437, 0, 0.554054081, 0)
+			ArrowIco.Selectable = จริง
+			ArrowIco.Size = UDim2.new(0, 28, 0, 24)
+			ArrowIco.Image = "http://www.roblox.com/asset/?id=6034818372"
+
+			TextBox.FocusLost: เชื่อมต่อ (
+				ฟังก์ชัน(ตอน)
+					ถ้า ep แล้ว
+						ถ้า #TextBox.Text > 0 แล้ว
+							pcall(โทรกลับ, TextBox.Text)
+							ถ้าหายแล้ว
+								TextBox.Text = ""
+							จบ
+						จบ
+					จบ
+				จบ
+			)
+
+			ArrowBtn.MouseButton1Click:Connect(ฟังก์ชัน()
+				ถ้า TextboxDescToggled == false แล้ว
+					กล่องข้อความ:TweenSize(UDim2.new(0, 457, 0, 81), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ImageColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของภาพ = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{การหมุน = 180}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลมเล็ก,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						คำอธิบาย,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0.3}
+					):เล่น()
+					รอ(.4)
+					Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+				อื่น
+					กล่องข้อความ:TweenSize(UDim2.new(0, 457, 0, 43), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, .6, จริง)
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ImageColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของภาพ = .3}
+					):เล่น()
+					TweenService:สร้าง(
+						ลูกศรIco,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{การหมุน = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = Color3.fromRGB(211, 211, 211)}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลมเล็ก,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 1}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0.3}
+					):เล่น()
+					TweenService:สร้าง(
+						คำอธิบาย,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 1}
+					):เล่น()
+					รอ(.4)
+					Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+				จบ
+				TextboxDescToggled = ไม่ใช่ TextboxDescToggled
+			จบ)
+			Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+		จบ
+		ฟังก์ชัน ContainerContent:Bind(text,presetbind,callback)
+			คีย์ท้องถิ่น = presetbind.Name
+			ผูกท้องถิ่น = Instance.new ("TextButton")
+			BindCorner ท้องถิ่น = Instance.new ("UICorner")
+			ชื่อท้องถิ่น = Instance.new("TextLabel")
+			Local Circle = Instance.new("เฟรม")
+			CircleCorner ท้องถิ่น = Instance.new ("UICorner")
+			CircleSmall ท้องถิ่น = Instance.new ("Frame")
+			CircleSmallCorner ท้องถิ่น = Instance.new ("UICorner")
+			BindLabel ท้องถิ่น = Instance.new ("TextLabel")
+
+			Bind.Name = "ผูกมัด"
+			Bind.Parent = คอนเทนเนอร์
+			Bind.BackgroundColor3 = Color3.fromRGB (64, 68, 75)
+			Bind.ClipsDescendants = true
+			ตำแหน่งผูก = UDim2.new(0.40625, 0, 0.828947306, 0)
+			Bind.Size = UDim2.new(0, 457, 0, 43)
+			Bind.AutoButtonColor = false
+			Bind.Font = Enum.Font.SourceSans
+			ผูกข้อความ = ""
+			Bind.TextColor3 = Color3.fromRGB(0, 0, 0)
+			Bind.TextSize = 14.000
+
+			BindCorner.CornerRadius = UDim.new(0, 4)
+			BindCorner.Name = "มุมผูก"
+			BindCorner.Parent = ผูก
+
+			Title.Name = "ชื่อเรื่อง"
+			Title.Parent = ผูกมัด
+			Title.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+			Title.BackgroundTransparency = 1.000
+			Title.Position = UDim2.new(0.0822437406, 0, 0, 0)
+			Title.Size = UDim2.new(0, 113, 0, 42)
+			Title.Font = Enum.Font.Gotham
+			Title.Text = text
+			Title.TextColor3 = Color3.fromRGB (255, 255, 255)
+			Title.TextSize = 15.000
+			Title.TextTransparency = 0.300
+			Title.TextXAlignment = Enum.TextXAlignment.Left
+
+			Circle.Name = "วงกลม"
+			Circle.Parent = ชื่อเรื่อง
+			Circle.Activ = true
+			Circle.AnchorPoint = Vector2.new(0.5, 0.5)
+			Circle.BackgroundColor3 = Color3.fromRGB(211, 211, 211)
+			Circle.Position = UDim2.new(-0.150690272, 0, 0.503000021, 0)
+			Circle.Size = UDim2.new(0, 11, 0, 11)
+
+			CircleCorner.CornerRadius = UDim.new(2, 6)
+			CircleCorner.Name = "มุมวงกลม"
+			CircleCorner.Parent = วงกลม
+
+			CircleSmall.Name = "วงกลมเล็ก"
+			CircleSmall.Parent = วงกลม
+			CircleSmall.Activ = จริง
+			CircleSmall.AnchorPoint = Vector2.new (0.5, 0.5)
+			CircleSmall.BackgroundColor3 = Color3.fromRGB (64, 68, 75)
+			CircleSmall.BackgroundTransparency = 1.000
+			CircleSmall.Position = UDim2.new(0.485673368, 0, 0.503000021, 0)
+			CircleSmall.Size = UDim2.new(0, 9, 0, 9)
+
+			CircleSmallCorner.CornerRadius = UDim.ใหม่(2, 6)
+			CircleSmallCorner.Name = "CircleSmallCorner"
+			CircleSmallCorner.Parent = CircleSmall
+
+			BindLabel.Name = "BindLabel"
+			BindLabel.Parent = ชื่อเรื่อง
+			BindLabel.BackgroundColor3 = Color3.fromRGB (255, 255, 255)
+			BindLabel.BackgroundTransparency = 1.000
+			BindLabel.Position = UDim2.new(2.56011987, 0, 0, 0)
+			BindLabel.Size = UDim2.new(0, 113, 0, 42)
+			BindLabel.Font = Enum.Font.Gotham
+			BindLabel.Text = คีย์
+			BindLabel.TextColor3 = Color3.fromRGB (255, 255, 255)
+			BindLabel.TextSize = 15.000
+			BindLabel.TextTransparency = 0.300
+			BindLabel.TextXAlignment = Enum.TextXAlignment.Right
+
+			Bind.MouseEnter:เชื่อมต่อ(ฟังก์ชั่น()
+				TweenService:สร้าง(
+					ชื่อ,
+					TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+					{ความโปร่งใสของข้อความ = 0}
+				):เล่น()
+			จบ)
+
+			Bind.MouseLeave:เชื่อมต่อ(ฟังก์ชั่น()
+				TweenService:สร้าง(
+					ชื่อ,
+					TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+					{ความโปร่งใสของข้อความ = 0.3}
+				):เล่น()
+			จบ)
+
+			Bind.MouseButton1Click:เชื่อมต่อ(
+				การทำงาน()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						BindLabel,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = PresetColor}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลมเล็ก,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0}
+					):เล่น()
+					TweenService:สร้าง(
+						BindLabel,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0}
+					):เล่น()
+					BindLabel.Text = "..."
+					local inputwait = เกม:GetService("UserInputService")).InputBegan:wait()
+					ถ้า inputwait.KeyCode.Name ~= "Unknown" แล้ว
+						BindLabel.Text = inputwait .KeyCode.Name
+						คีย์ = inputwait .KeyCode.Name
+					จบ
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						BindLabel,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{TextColor3 = Color3.fromRGB(255,255,255)}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลม,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{BackgroundColor3 = Color3.fromRGB(211, 211, 211)}
+					):เล่น()
+					TweenService:สร้าง(
+						วงกลมเล็ก,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสในพื้นหลัง = 1}
+					):เล่น()
+					TweenService:สร้าง(
+						ชื่อ,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0.3}
+					):เล่น()
+					TweenService:สร้าง(
+						BindLabel,
+						TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+						{ความโปร่งใสของข้อความ = 0.3}
+					):เล่น()
+				จบ
+			)
+
+			เกม:GetService("UserInputService")).InputBegan:connect(
+			ฟังก์ชั่น (ปัจจุบัน, กด)
+				ถ้าไม่กดก็
+					ถ้า current.KeyCode.Name == คีย์ แล้ว
+						พีซีคอล (โทรกลับ)
+					จบ
+				จบ
+			จบ
+			)
+
+			Container.CanvasSize = UDim2.new(0, 0, 0, ContainerLayout.AbsoluteContentSize.Y)
+		จบ
+		ส่งคืน ContainerContent
+	จบ
+	กลับแท็บ
+จบ
+กลับฟลักซ์
